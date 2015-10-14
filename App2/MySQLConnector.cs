@@ -219,15 +219,15 @@ namespace App2
             try
             {
                 conn.Open();
-                
+
                 string stm = string.Format("INSERT INTO `bosch`.`processes` "
-                                            + "(`process_id`, `process_order_id`, `process_code`, `process_quantity`, `process_waste`, " 
+                                            + "(`process_id`, `process_order_id`, `process_code`, `process_quantity`, `process_waste`, "
                                             + "`process_start`, `process_change`, `process_complete`, `process_n_events`) "
                                             + "VALUES (NULL, '{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}'); "
                                             + "SELECT last_insert_id()",
-                                            order.id, process.code, process.quantity, process.waste, 
-                                            process.start.ToString("yyyy-MM-dd hh:mm:ss"), process.change.ToString("yyyy-MM-dd hh:mm:ss"), process.complete?1:0, 0);
-                
+                                            order.id, process.code, process.quantity, process.waste,
+                                            process.start.ToString("yyyy-MM-dd hh:mm:ss"), process.change.ToString("yyyy-MM-dd hh:mm:ss"), process.complete ? 1 : 0, 0);
+
                 MySqlCommand cmd = new MySqlCommand(stm, conn);
                 rdr = cmd.ExecuteReader();
 
@@ -240,7 +240,51 @@ namespace App2
             }
             catch (MySqlException ex)
             {
-                status.Text = "Could not load process from DB. \nConnection status: " + conn.State + " \nException: " + ex.Message;
+                status.Text = "Could not create insert process into DB. \nConnection status: " + conn.State + " \nException: " + ex.Message;
+                return -1;
+            }
+            finally
+            {
+                if (rdr != null)
+                    rdr.Close();
+
+                if (conn != null)
+                    conn.Close();
+            }
+
+            return r;
+        }
+
+        public int createOrder(Order order, TextBlock status)
+        {
+            MySqlDataReader rdr = null;
+            int r;
+
+            try
+            {
+                conn.Open();
+
+                string stm = string.Format("INSERT INTO `bosch`.`orders` "
+                                            + "(`order_id`, `order_code`, `order_quantity`, "
+                                            + "`order_start`, `order_change`, `order_complete`, `order_n_processes`) "
+                                            + "VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}'); "
+                                            + "SELECT last_insert_id()",
+                                            order.id, order.code, order.quantity,
+                                            order.start.ToString("yyyy-MM-dd hh:mm:ss"), order.change.ToString("yyyy-MM-dd hh:mm:ss"), order.complete ? 1 : 0, 0);
+
+                MySqlCommand cmd = new MySqlCommand(stm, conn);
+                rdr = cmd.ExecuteReader();
+
+                if (rdr.Read())
+                    r = rdr.GetInt32("last_insert_id()");
+                else
+                    r = -1;
+
+
+            }
+            catch (MySqlException ex)
+            {
+                status.Text = "Could not create insert order into DB. \nConnection status: " + conn.State + " \nException: " + ex.Message;
                 return -1;
             }
             finally

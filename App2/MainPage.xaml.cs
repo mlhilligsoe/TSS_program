@@ -118,30 +118,30 @@ namespace App2
         private void testAppConfiguration()
         {
             // Save pin configuration to storage
-            settings.Values["StartupPin"] = STARTUP;
-            settings.Values["NormalPin"] = NORMAL;
-            settings.Values["ManualPin"] = MANUAL;
-            settings.Values["LatchPin"] = LATCH;
-            settings.Values["SplitPin"] = SPLIT;
-
+            Storage.SetSetting<byte>("StartupPin", STARTUP);
+            Storage.SetSetting<byte>("NormalPin", NORMAL);
+            Storage.SetSetting<byte>("ManualPin", MANUAL);
+            Storage.SetSetting<byte>("LatchPin", LATCH);
+            Storage.SetSetting<byte>("SplitPin", SPLIT);
+            
             // Test Machine parameters
-            if (settings.Values["MachineName"] == null)
+            if (!Storage.SettingExists("MachineName"))
             {
                 Frame.Navigate(typeof(Config));
             }
 
             // Test USB & Arduino Parameters
-            if (settings.Values["VID"] == null
-                || settings.Values["PID"] == null)
+            if (!Storage.SettingExists("VID")
+                || !Storage.SettingExists("PID"))
             {
                 Frame.Navigate(typeof(Config));
             }
 
             // Test SQL parameters
-            if (settings.Values["SQLServer"] == null
-                || settings.Values["SQLDB"] == null
-                || settings.Values["SQLUser"] == null
-                || settings.Values["SQLPass"] == null
+            if (!Storage.SettingExists("SQLServer")
+                || !Storage.SettingExists("SQLDB")
+                || !Storage.SettingExists("SQLUser")
+                || !Storage.SettingExists("SQLUser")
                 )
             {
                 Frame.Navigate(typeof(Config));
