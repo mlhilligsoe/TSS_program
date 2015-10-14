@@ -1,0 +1,43 @@
+﻿<Page
+    x:Class="App2.Config"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:App2"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Padding="0">
+        <StackPanel HorizontalAlignment="Left" Width="130" Height="640" VerticalAlignment="Top" Padding="10,20,0,0">
+            <TextBlock x:Name="textBlock_MachineName" TextWrapping="Wrap" Text="Machine Name" Height="25" Margin="0,10,0,0"/>
+            <TextBlock x:Name="textBlock_StartupPin" TextWrapping="Wrap" Text="Startup Pin" Margin="-0.4,10,-0.6,0" Height="25"/>
+            <TextBlock x:Name="textBlock_NormalPin" TextWrapping="Wrap" Text="Normal Pin" Margin="-0.4,10,-0.6,0" Height="25"/>
+            <TextBlock x:Name="textBlock_ManualPin" TextWrapping="Wrap" Text="Manual Pin" Margin="-0.4,10,-0.6,0" Height="25"/>
+            <TextBlock x:Name="textBlock_LatchPin" TextWrapping="Wrap" Text="Latch Pin" Margin="-0.4,10,-0.6,0" Height="25"/>
+            <TextBlock x:Name="textBlock_SplitPin" TextWrapping="Wrap" Text="Split Pin" Margin="-0.4,10,-0.6,0" Height="25"/>
+            <TextBlock x:Name="textBlock_SQLServer" TextWrapping="Wrap" Text="SQL Server" Margin="-0.4,10,-0.6,0" Height="25"/>
+            <TextBlock x:Name="textBlock_SQLDB" TextWrapping="Wrap" Text="SQL Database" Margin="-0.4,10,-0.6,0" Height="25"/>
+            <TextBlock x:Name="textBlock_SQLUser" TextWrapping="Wrap" Text="SQL User" Margin="-0.4,10,-0.6,0" Height="25"/>
+            <TextBlock x:Name="textBlock_SQLPass" TextWrapping="Wrap" Text="SQL Pass" Margin="-0.4,10,-0.6,0" Height="25"/>
+            <TextBlock x:Name="textBlock_VID" TextWrapping="Wrap" Text="VID" Margin="-0.8,10,-1.2,0" Height="25"/>
+            <TextBlock x:Name="textBlock_PID" TextWrapping="Wrap" Text="PID" Margin="-0.8,10,-1.2,0" Height="25"/>
+        </StackPanel>
+        <StackPanel HorizontalAlignment="Left" Width="321" Height="640" VerticalAlignment="Top" Margin="130,0,0,0" Padding="10,20,0,0">
+            <TextBox x:Name="textBox_MachineName" TextWrapping="Wrap" Text="" Margin="0,5,0,0" MinHeight="30" MinWidth="300" MaxWidth="300" MaxHeight="30" Height="30"/>
+            <TextBox x:Name="textBox_StartupPin" TextWrapping="Wrap" Text="" Margin="-0.4,5,-0.6,0" MinHeight="30" MinWidth="300" MaxWidth="300" MaxHeight="30" Height="30" IsReadOnly="True"/>
+            <TextBox x:Name="textBox_NormalPin" TextWrapping="Wrap" Text="" Margin="-0.4,5,-0.6,0" MinHeight="30" MinWidth="300" MaxWidth="300" MaxHeight="30" Height="30" IsReadOnly="True"/>
+            <TextBox x:Name="textBox_ManualPin" TextWrapping="Wrap" Text="" Margin="-0.4,5,-0.6,0" MinHeight="30" MinWidth="300" MaxWidth="300" MaxHeight="30" Height="30" IsReadOnly="True"/>
+            <TextBox x:Name="textBox_LatchPin" TextWrapping="Wrap" Text="" Margin="-0.4,5,-0.6,0" MinHeight="30" MinWidth="300" MaxWidth="300" MaxHeight="30" Height="30" IsReadOnly="True"/>
+            <TextBox x:Name="textBox_SplitPin" TextWrapping="Wrap" Text="" Margin="-0.4,5,-0.6,0" MinHeight="30" MinWidth="300" MaxWidth="300" MaxHeight="30" Height="30" IsReadOnly="True"/>
+            <TextBox x:Name="textBox_SQLServer" TextWrapping="Wrap" Text="" Margin="-0.4,5,-0.6,0" MinHeight="30" MinWidth="300" MaxWidth="300" MaxHeight="30" Height="30"/>
+            <TextBox x:Name="textBox_SQLDB" TextWrapping="Wrap" Text="" Margin="-0.4,5,-0.6,0" MinHeight="30" MinWidth="300" MaxWidth="300" MaxHeight="30" Height="30"/>
+            <TextBox x:Name="textBox_SQLUser" TextWrapping="Wrap" Text="" Margin="-0.4,5,-0.6,0" MinHeight="30" MinWidth="300" MaxWidth="300" MaxHeight="30" Height="30"/>
+            <TextBox x:Name="textBox_SQLPass" TextWrapping="Wrap" Text="" Margin="-0.4,5,-0.6,0" MinHeight="30" MinWidth="300" MaxWidth="300" MaxHeight="30" Height="30"/>
+            <TextBox x:Name="textBox_VID" TextWrapping="Wrap" Text="" Margin="-0.8,5,-0.8,0" MinHeight="30" MinWidth="300" MaxWidth="300" MaxHeight="30" Height="30"/>
+            <TextBox x:Name="textBox_PID" TextWrapping="Wrap" Text="" Margin="-0.8,5,-0.8,0" MinHeight="30" MinWidth="300" MaxWidth="300" MaxHeight="30" Height="30"/>
+        </StackPanel>
+        <Button x:Name="buttonCancel" Content="Cancel" HorizontalAlignment="Left" Margin="370,597,0,0" VerticalAlignment="Top" Click="buttonCancel_Click"/>
+        <Button x:Name="buttonSave" Content="Save" HorizontalAlignment="Left" Margin="370,539,0,20" VerticalAlignment="Top" Click="buttonSave_Click"/>
+        
+    </Grid>
+</Page>
