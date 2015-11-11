@@ -10,6 +10,12 @@ using Microsoft.Maker.Serial;
 using Microsoft.Maker.RemoteWiring;
 using System.Runtime.Serialization;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Navigation;
+using Windows.UI;
+using System.Threading.Tasks;
+using MyToolkit.Model;
+using MyToolkit.Paging;
+using App2.ViewModels;
 
 namespace App2
 {
@@ -39,6 +45,9 @@ namespace App2
         Order order;
         Process process;
 
+        // SplitTimer to handle unexpected events
+        DispatcherTimer splitTimer;
+
         public MainPage()
         {
             // Init App
@@ -52,7 +61,18 @@ namespace App2
 
             // Start app once MainPage is loaded (Otherwise, navigations will yield an error)
             this.Loaded += MainPage_Loaded;
-            
+
+            Model.PropertyChanged += (sender, args) =>
+            {
+                if (args.IsProperty<DataGridPageModel>(m => m.Filter))
+                {
+                    DataGrid.SetFilter<Person>(p =>
+                        p.FirstName.ToLower().Contains(Model.Filter.ToLower()) ||
+                        p.LastName.ToLower().Contains(Model.Filter.ToLower()) ||
+                        p.Category.ToLower().Contains(Model.Filter.ToLower()));
+                }
+            };
+
         }
 
         private void MainPage_Loaded(object sender, RoutedEventArgs e)
@@ -80,6 +100,11 @@ namespace App2
 
             // Update user interface
             updateGUI();
+
+            //  DispatcherTimer setup
+            splitTimer = new DispatcherTimer();
+            splitTimer.Tick += splitTimer_Tick;
+
         }
 
         // Configures, Opens and Tests arduino connection
@@ -149,66 +174,107 @@ namespace App2
             
         }
 
+       
+
         // Pasrse Commands received from keyboard/Barcode scanner
-        private void parseCommand(string input)
+        public void parseCommand(string input)
         {
             String[] cmd = input.Split(' ');
 
-            if(cmd.Length > 0)
+            switch (cmd[0])
             {
-                switch (cmd[0])
-                {
-                    case "CONFIG":
-                        Frame.Navigate(typeof(Config));
-                        break;
-                    case "SAVEPROCESS":
-                        Process.Save(process);
-                        break;
-                    case "LOADPROCESS":
-                        process = Process.Load();
+                case "CONFIG":
+                    Frame.Navigate(typeof(Config));
+                    break;
+                case "SAVEPROCESS":
+                    Process.Save(process);
+                    break;
+                case "LOADPROCESS":
+                    process = Process.Load();
+                    updateGUI();
+                    break;
+                case "CREATEPROCESS":
+                    process = new Process(123, "Udstykning");
+                    updateGUI();
+                    break;
+                case "SHOWTOGGLES":
+                    toggleSwitches.Visibility = Visibility.Visible;
+                    updateGUI();
+                    break;
+                case "HIDETOGGLES":
+                    toggleSwitches.Visibility = Visibility.Collapsed;
+                    updateGUI();
+
+                    break;
+                case "LOADORDERID":
+                    if (cmd.Length > 1)
+                        sql.loadOrder(int.Parse(cmd[1]), ref order, textBlockStatus);
+                    updateGUI();
+                    break;
+                case "LOADORDERCODE":
+                    if (cmd.Length > 1)
+                        sql.loadOrder(cmd[1], ref order, textBlockStatus);
+                    updateGUI();
+                    break;
+                case "LOADPROCESSID":
+                    if (cmd.Length > 1)
+                        sql.loadProcess(int.Parse(cmd[1]), ref process, textBlockStatus);
+                    updateGUI();
+                    break;
+
+
+                case "LOADPROCESSORDERID":
+                    if (cmd.Length > 1)
+                        sql.loadProcessFromOrder(int.Parse(cmd[1]), ref process, textBlockStatus);
+                    updateGUI();
+                    break;
+                case "INSERTPROCESS":
+                    textBlockStatus.Text = "Inserted Process: " + sql.createProcess("Udstykning", order, textBlockStatus).ToString();
+                    break;
+                case "DEBUG":
+                    textBlockStatus.Height = 300;
+                    break;
+                case "Addevent1":
+                    if (cmd.Length > 1)
+                     //gør så den laver en ny textblock og skriver et event ind
+                    updateGUI();
+                    break;
+
+                default:
+                    if(cmd[0].Length == 13)
+                    {
+                        int ordrenr = int.Parse(cmd[0].Remove(8).Substring(2));
+                        //string ordernr2 = ordernr.Substring(2);
+                        LabelOrderCode.Text = "Ordre Nr: " + ordrenr;
+
+                        // Set current process to null
+                        order = null;
+
+                        // Try to load from SQL DB
+                        sql.loadOrder(ordrenr, ref order, textBlockStatus);
+                        
+                        // Else Create new order
+                        if (order == null)
+                        {
+                            order = new Order(ordrenr, cmd[0], "XXX");
+                            sql.createOrder(order, textBlockStatus);
+                        }
+
+                        // Start new process
+                        int process_id = sql.createProcess("Udstykning", order, textBlockStatus);
+                        process = new Process(process_id, "Udstykning");
+
+
                         updateGUI();
-                        break;
-                    case "CREATEPROCESS":
-                        process = new Process(123, "Udstykning");
-                        updateGUI();
-                        break;
-                    case "SHOWTOGGLES":
-                        toggleSwitches.Visibility = Visibility.Visible;
-                        updateGUI();
-                        break;
-                    case "HDIETOGGLES":
-                        toggleSwitches.Visibility = Visibility.Collapsed;
-                        updateGUI();
-                        break;
-                    case "LOADORDERID":
-                        if (cmd.Length > 1)
-                            sql.loadOrder(int.Parse(cmd[1]), ref order, textBlockStatus);
-                        updateGUI();
-                        break;
-                    case "LOADORDERCODE":
-                        if (cmd.Length > 1)
-                            sql.loadOrder(cmd[1], ref order, textBlockStatus);
-                        updateGUI();
-                        break;
-                    case "LOADPROCESSID":
-                        if (cmd.Length > 1)
-                            sql.loadProcess(int.Parse(cmd[1]), ref process, textBlockStatus);
-                        updateGUI();
-                        break;
-                    case "LOADPROCESSORDERID":
-                        if (cmd.Length > 1)
-                            sql.loadProcessFromOrder(int.Parse(cmd[1]), ref process, textBlockStatus);
-                        updateGUI();
-                        break;
-                    case "INSERTPROCESS":
-                        textBlockStatus.Text = "Inserted Process: " + sql.createProcess(process, order, textBlockStatus).ToString();
-                        break;
-                    case "DEBUG":
-                        textBlockStatus.Height = 300;
-                        break;
+                    }
+                    break;
+
+
                 }
-            }
+         
         }
+
+        
 
         // Called on keyup from command textbox
         private void textBox_Command_KeyUp(object sender, KeyRoutedEventArgs e)
@@ -216,6 +282,7 @@ namespace App2
             if (e.Key == VirtualKey.Enter)
             {
                 parseCommand(textBoxCommand.Text);
+
                 textBoxCommand.Text = "";
 
             }
@@ -258,10 +325,10 @@ namespace App2
                 textBlockOrderProduct.Text = order.product;
                 textBlockOrderQuantity.Text = order.quantity.ToString();
                 textBlockOrderStart.Text = order.start.ToString("H:mm   dd/MM");
-                if (order.change.Ticks > 0)
+                if (order.complete)
                     textBlockOrderComplete.Text = order.change.ToString("H:mm   dd/MM");
                 else
-                    textBlockOrderComplete.Text = "";
+                    textBlockOrderComplete.Text = "-";
             }
             else
             {
@@ -326,6 +393,8 @@ namespace App2
 
                                 break;
                             case NORMAL:
+                                // Init timer
+                                //splitTimer = new DispatcherTimer();
 
                                 break;
                             case MANUAL:
@@ -335,16 +404,27 @@ namespace App2
 
                                 break;
                             case SPLIT:
-
+                                
                                 if(machine.getState(NORMAL) == true && machine.getState(SPLIT) == true)
                                 {
+                                    // Count up in produced or waste
                                     if (machine.getState(LATCH) == true)
+                                    {
                                         process.quantity++;
+                                    }
                                     else
+                                    {
                                         process.waste++;
+                                    }
 
                                     process.change = DateTime.Now;
+
+                                    // Restart timer
+                                    splitTimer.Interval = new TimeSpan(0, 0, 5);
+                                    splitTimer.Start();
                                 }
+
+                                
 
                                 break;
                         }
@@ -410,6 +490,34 @@ namespace App2
                 textBlockStatus.Text = "Microcontroller Connection Ready";
             }));
         }
+
+        // SplitTimer method
+        private void splitTimer_Tick(object sender, object e)
+        {
+            splitTimer.Stop();
+            eventPanel.Visibility = Visibility.Visible;
+        }
+
+        private void button_error_Click(object sender, RoutedEventArgs e)
+        {
+            eventPanel.Visibility = Visibility.Collapsed;
+        }
+
+        private void button_done_Click(object sender, RoutedEventArgs e)
+        {
+            order.complete = true;
+            eventPanel.Visibility = Visibility.Collapsed;
+            updateGUI();
+        }
+
+        public DataGridPageModel Model
+        {
+            get { return (DataGridPageModel) Resources["ViewModel"]; }
+        }
+        
+
     }
+
+
 }
 
