@@ -10,19 +10,15 @@
     xmlns:controls="using:MyToolkit.Controls"
     xmlns:viewModels="using:App2.ViewModels">
 
-    <paging:MtPage.Resources>
-        <viewModels:DataGridPageModel x:Key="ViewModel" />
-    </paging:MtPage.Resources>
-
-    <Grid x:Name="rootGrid" Background="#555555" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+    <Grid x:Name="rootGrid" Background="#555555" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  DataContext="{StaticResource ViewModel}">
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="25*"/>
-            <ColumnDefinition Width="65*"/>
-            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="25*"/>
+            <ColumnDefinition Width="50*"/>
         </Grid.ColumnDefinitions>
 
         <StackPanel Orientation="Vertical"  Grid.Row="0" Grid.Column="1" Background="#FF0B8080">

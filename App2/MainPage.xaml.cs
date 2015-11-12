@@ -62,17 +62,6 @@ namespace App2
             // Start app once MainPage is loaded (Otherwise, navigations will yield an error)
             this.Loaded += MainPage_Loaded;
 
-            Model.PropertyChanged += (sender, args) =>
-            {
-                if (args.IsProperty<DataGridPageModel>(m => m.Filter))
-                {
-                    DataGrid.SetFilter<Person>(p =>
-                        p.FirstName.ToLower().Contains(Model.Filter.ToLower()) ||
-                        p.LastName.ToLower().Contains(Model.Filter.ToLower()) ||
-                        p.Category.ToLower().Contains(Model.Filter.ToLower()));
-                }
-            };
-
         }
 
         private void MainPage_Loaded(object sender, RoutedEventArgs e)
