@@ -8,31 +8,50 @@
     mc:Ignorable="d"
     xmlns:paging="using:MyToolkit.Paging"
     xmlns:controls="using:MyToolkit.Controls"
-    xmlns:viewModels="using:App2.ViewModels">
+    xmlns:viewmodels="using:App2.ViewModels">
 
+    <Page.Resources>
+        <DataTemplate x:Key="MasterListViewItemTemplate" x:DataType="viewmodels:ItemViewModel">
+            <Grid Margin="0,11,0,13">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="{x:Bind Title}" Style="{ThemeResource BaseTextBlockStyle}" Foreground="White" FontWeight="Bold" />
+
+                <TextBlock
+                    Text="{x:Bind Text}"
+                    Grid.Row="1"
+                    MaxLines="1"
+                    Style="{ThemeResource ListBodyTextBlockStyle}" 
+                     Foreground="White" FontWeight="Bold" />
+
+                <TextBlock
+                    Text="{x:Bind DateCreatedHourMinute}"
+                    Grid.Column="1"
+                    Margin="12,1,0,0"
+                    Style="{ThemeResource ListCaptionAltTextblockStyle}" 
+                     Foreground="White" FontWeight="Bold" />
+            </Grid>
+        </DataTemplate>
+    </Page.Resources>
+    
     <Grid x:Name="rootGrid" Background="#555555" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  DataContext="{StaticResource ViewModel}">
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="25*"/>
-            <ColumnDefinition Width="25*"/>
-            <ColumnDefinition Width="50*"/>
+            <ColumnDefinition Width="30*"/>
+            <ColumnDefinition Width="70*"/>
+            <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
-
-        <StackPanel Orientation="Vertical"  Grid.Row="0" Grid.Column="1" Background="#FF0B8080">
-            <TextBlock x:Name="LabelProcStatus" TextWrapping="Wrap" Text="Status:" VerticalAlignment="Top" Margin="22,18,442.8,0" FontSize="24" Width="220" TextAlignment="Left" Foreground="White" FontWeight="Bold"/>
-            <TextBlock x:Name="textBlockProcStatus" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" Margin="22,-6,442.8,0" FontSize="24" Width="220" TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
-            <TextBlock x:Name="LabelProcQuantity" TextWrapping="Wrap" Text="Produceret:" VerticalAlignment="Top" Margin="22,12,442.8,0" FontSize="16" Width="220" TextAlignment="Left" Foreground="White" FontWeight="Bold"/>
-            <TextBlock x:Name="textBlockProcQuantity" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" Margin="22,-2,442.8,-2" FontSize="16" Width="220" TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
-            <TextBlock x:Name="LabelProcWaste" TextWrapping="Wrap" Text="Spild:" VerticalAlignment="Top" Margin="22,12,442.8,0" FontSize="16" Width="220" TextAlignment="Left" Foreground="White" FontWeight="Bold"/>
-            <TextBlock x:Name="textBlockProcWaste" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" Margin="22,-2,442.8,-2" FontSize="16" Width="220" TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
-            <TextBlock x:Name="LabelProcStart" TextWrapping="Wrap" Text="Started:" VerticalAlignment="Top" Margin="22,12,442.8,0" FontSize="16" Width="220" TextAlignment="Left" Foreground="White" FontWeight="Bold"/>
-            <TextBlock x:Name="textBlockProcStart" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" Margin="22,-2,442.8,-2" FontSize="16" Width="220" TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
-            <TextBlock x:Name="LabelProcComplete" TextWrapping="Wrap" Text="Færdiggjort:" VerticalAlignment="Top" Margin="22,12,442.8,0" FontSize="16" Width="220" TextAlignment="Left" Foreground="White" FontWeight="Bold"/>
-            <TextBlock x:Name="textBlockProcComplete" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" Margin="22,-2,442,-2" FontSize="16" Width="220" TextAlignment="Right" Foreground="White" FontWeight="Bold" Height="56"/>
-        </StackPanel>
 
         <StackPanel Orientation="Vertical"  Grid.Row="0" Grid.Column="0" Background="#FF075959">
             <TextBlock x:Name="LabelOrderCode" TextWrapping="Wrap" VerticalAlignment="Top" Margin="18,18,18,0" FontSize="24" Width="220" TextAlignment="Left" Foreground="White" FontWeight="Bold" Text="Ordre Nr:"/>
@@ -44,25 +63,35 @@
             <TextBlock x:Name="LabelOrderStart" TextWrapping="Wrap" Text="Started:" VerticalAlignment="Top" Margin="18,12,18,0" FontSize="16" Width="220" TextAlignment="Left" Foreground="White" FontWeight="Bold"/>
             <TextBlock x:Name="textBlockOrderStart" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" Margin="18,-2" FontSize="16" Width="220" TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
             <TextBlock x:Name="LabelOrderComplete" TextWrapping="Wrap" Text="Færdiggjort:" VerticalAlignment="Top" Margin="18,12,18,0" FontSize="16" Width="220" TextAlignment="Left" Foreground="White" FontWeight="Bold"/>
-            <TextBlock x:Name="textBlockOrderComplete" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" Margin="22,-2,21.2,-2" FontSize="16" Width="220" TextAlignment="Right" Foreground="White" FontWeight="Bold" Height="55"/>
+            <TextBlock x:Name="textBlockOrderComplete" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" Margin="22,-2,21.2,-2" FontSize="16" Width="220" TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
+            <TextBlock x:Name="LabelOrderComplete2" TextWrapping="Wrap" Text="Færdiggjort:" VerticalAlignment="Top" Margin="18,12,18,0" FontSize="16" Width="220" TextAlignment="Left" Foreground="White" FontWeight="Bold"/>
+            <TextBlock x:Name="textBlockOrderComplete2" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" Margin="22,-2,21.2,-2" FontSize="16" Width="220" TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
+
+            <TextBlock x:Name="LabelProcStatus" TextWrapping="Wrap" Text="Status:" VerticalAlignment="Top" Margin="18,12,18,0" FontSize="24" Width="220" TextAlignment="Left" Foreground="White" FontWeight="Bold"/>
+            <TextBlock x:Name="textBlockProcStatus" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" Margin="22,-2,21.2,-2" FontSize="24" Width="220" TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
+            <TextBlock x:Name="LabelProcQuantity" TextWrapping="Wrap" Text="Produceret:" VerticalAlignment="Top" Margin="18,12,18,0" FontSize="16" Width="220" TextAlignment="Left" Foreground="White" FontWeight="Bold"/>
+            <TextBlock x:Name="textBlockProcQuantity" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" Margin="18,12,18,0" FontSize="16" Width="220" TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
+            <TextBlock x:Name="LabelProcWaste" TextWrapping="Wrap" Text="Spild:" VerticalAlignment="Top" Margin="22,-2,21.2,-2" FontSize="16" Width="220" TextAlignment="Left" Foreground="White" FontWeight="Bold"/>
+            <TextBlock x:Name="textBlockProcWaste" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" Margin="18,12,18,0" FontSize="16" Width="220" TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
+            <TextBlock x:Name="LabelProcStart" TextWrapping="Wrap" Text="Started:" VerticalAlignment="Top" Margin="22,-2,21.2,-2" FontSize="16" Width="220" TextAlignment="Left" Foreground="White" FontWeight="Bold"/>
+            <TextBlock x:Name="textBlockProcStart" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" Margin="18,12,18,0" FontSize="16" Width="220" TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
+            <TextBlock x:Name="LabelProcComplete" TextWrapping="Wrap" Text="Færdiggjort:" VerticalAlignment="Top" Margin="22,-2,21.2,-2" FontSize="16" Width="220" TextAlignment="Left" Foreground="White" FontWeight="Bold"/>
+            <TextBlock x:Name="textBlockProcComplete" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" Margin="18,12,18,0" FontSize="16" Width="220" TextAlignment="Right" Foreground="White" FontWeight="Bold" Height="56"/>
         </StackPanel>
 
-        <controls:DataGrid x:Name="DataGrid" Grid.Row="0"  Grid.Column="2"
-                           ItemsSource="{Binding People}" 
-                           SelectionMode="Multiple" 
-                           SelectedItem="{Binding SelectedPerson, Mode=TwoWay}"
-                           DefaultOrderIndex="1">
-            <controls:DataGrid.Columns>
-                <controls:DataGridTextColumn Width="50" Header="#" Binding="{Binding FirstName}" />
-                <controls:DataGridTextColumn Width="100" Header="Event" Binding="{Binding LastName}" />
-                <controls:DataGridTextColumn Width="*" Header="Category" Binding="{Binding Category}" />
-            </controls:DataGrid.Columns>
-            <!--<controls:DataGrid.RowStyle>
-                <Style TargetType="ListBoxItem">
-                    <Setter Property="Padding" Value="0"></Setter>
+        <ListView Grid.Column="1"
+            x:Name="MasterListView"
+            Grid.Row="0"
+            ItemContainerTransitions="{x:Null}"
+            ItemTemplate="{StaticResource MasterListViewItemTemplate}" 
+            SelectionMode="None"
+                  Background="#FF0B8080">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                 </Style>
-            </controls:DataGrid.RowStyle>-->
-        </controls:DataGrid>
+            </ListView.ItemContainerStyle>
+        </ListView>
 
         <TextBox x:Name="textBoxCommand" Grid.Row="1" TextWrapping="Wrap" Width="480" Margin="0,10,10,10" Foreground="White" FontSize="18" FontWeight="Bold" KeyUp="textBox_Command_KeyUp" Height="36" VerticalAlignment="Bottom" HorizontalAlignment="Right" Grid.ColumnSpan="3"/>
         <TextBlock x:Name="textBlockStatus" Grid.Row="1" TextWrapping="Wrap" Text="Status:" Width="480" Margin="10,10,0,10" Foreground="White" FontSize="18" Grid.ColumnSpan="2" Height="36" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>

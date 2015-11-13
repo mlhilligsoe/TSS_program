@@ -16,6 +16,8 @@ using System.Threading.Tasks;
 using MyToolkit.Model;
 using MyToolkit.Paging;
 using App2.ViewModels;
+using System.Collections.Generic;
+using App2.Data;
 
 namespace App2
 {
@@ -94,6 +96,21 @@ namespace App2
             splitTimer = new DispatcherTimer();
             splitTimer.Tick += splitTimer_Tick;
 
+
+
+            var items = MasterListView.ItemsSource as List<ItemViewModel>;
+
+            if (items == null)
+            {
+                items = new List<ItemViewModel>();
+
+                foreach (var item in ItemsDataSource.GetAllItems())
+                {
+                    items.Add(ItemViewModel.FromItem(item));
+                }
+
+                MasterListView.ItemsSource = items;
+            }
         }
 
         // Configures, Opens and Tests arduino connection
