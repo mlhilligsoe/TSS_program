@@ -18,6 +18,8 @@ using MyToolkit.Paging;
 using App2.ViewModels;
 using System.Collections.Generic;
 using App2.Data;
+using Windows.UI.Xaml.Data;
+using System.Collections.ObjectModel;
 
 namespace App2
 {
@@ -46,6 +48,7 @@ namespace App2
         Machine machine;
         Order order;
         Process process;
+        ObservableCollection<Event> events = new ObservableCollection<Event>();
 
         // SplitTimer to handle unexpected events
         DispatcherTimer splitTimer;
@@ -58,9 +61,13 @@ namespace App2
             // Create MainPage handle
             Current = this;
 
+            // If events are saved, load events
+            EventListView.ItemsSource = events;
+            events.Add(new Data.Event() { listId = 0, start = DateTime.Now, code = "evt12", description = "Process 12 started." });
+
             // Fullscreen
             ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
-
+            
             // Start app once MainPage is loaded (Otherwise, navigations will yield an error)
             this.Loaded += MainPage_Loaded;
 
@@ -89,6 +96,7 @@ namespace App2
             if (Storage.SettingExists("process"))
                 process = Process.Load();
 
+            
             // Update user interface
             updateGUI();
 
@@ -98,19 +106,7 @@ namespace App2
 
 
 
-            var items = MasterListView.ItemsSource as List<ItemViewModel>;
-
-            if (items == null)
-            {
-                items = new List<ItemViewModel>();
-
-                foreach (var item in ItemsDataSource.GetAllItems())
-                {
-                    items.Add(ItemViewModel.FromItem(item));
-                }
-
-                MasterListView.ItemsSource = items;
-            }
+            
         }
 
         // Configures, Opens and Tests arduino connection
@@ -516,12 +512,10 @@ namespace App2
             updateGUI();
         }
 
-        public DataGridPageModel Model
+        private void button_Click(object sender, RoutedEventArgs e)
         {
-            get { return (DataGridPageModel) Resources["ViewModel"]; }
+            events.Add(new Data.Event() { listId = 1, start = DateTime.Now, code = "evt23", description = "Process 23 started." });
         }
-        
-
     }
 
 

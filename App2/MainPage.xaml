@@ -6,43 +6,13 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    xmlns:paging="using:MyToolkit.Paging"
-    xmlns:controls="using:MyToolkit.Controls"
-    xmlns:viewmodels="using:App2.ViewModels">
+    xmlns:data="using:App2.Data">
 
     <Page.Resources>
-        <DataTemplate x:Key="MasterListViewItemTemplate" x:DataType="viewmodels:ItemViewModel">
-            <Grid Margin="0,11,0,13">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <TextBlock Text="{x:Bind Title}" Style="{ThemeResource BaseTextBlockStyle}" Foreground="White" FontWeight="Bold" />
-
-                <TextBlock
-                    Text="{x:Bind Text}"
-                    Grid.Row="1"
-                    MaxLines="1"
-                    Style="{ThemeResource ListBodyTextBlockStyle}" 
-                     Foreground="White" FontWeight="Bold" />
-
-                <TextBlock
-                    Text="{x:Bind DateCreatedHourMinute}"
-                    Grid.Column="1"
-                    Margin="12,1,0,0"
-                    Style="{ThemeResource ListCaptionAltTextblockStyle}" 
-                     Foreground="White" FontWeight="Bold" />
-            </Grid>
-        </DataTemplate>
+        
     </Page.Resources>
     
-    <Grid x:Name="rootGrid" Background="#555555" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  DataContext="{StaticResource ViewModel}">
+    <Grid x:Name="rootGrid" Background="#555555" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="auto"/>
@@ -79,15 +49,27 @@
             <TextBlock x:Name="textBlockProcComplete" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" Margin="18,12,18,0" FontSize="16" Width="220" TextAlignment="Right" Foreground="White" FontWeight="Bold" Height="56"/>
         </StackPanel>
 
-        <ListView Grid.Column="1"
-            x:Name="MasterListView"
-            Grid.Row="0"
-            ItemContainerTransitions="{x:Null}"
-            ItemTemplate="{StaticResource MasterListViewItemTemplate}" 
-            SelectionMode="None"
-                  Background="#FF0B8080">
+        <ListView Grid.Column="1" x:Name="EventListView" Grid.Row="0" Background="#FF0B8080" ItemsSource="{x:Bind events}">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="data:Event">
+                    <Grid Background="#19FFFFFF">
+                        
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="35" />
+                            <ColumnDefinition Width="50" />
+                            <ColumnDefinition Width="100*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="{x:Bind listId}" Style="{ThemeResource BaseTextBlockStyle}" Foreground="White" FontWeight="Bold" />
+                        <TextBlock Grid.Column="1" Text="{x:Bind code}" Style="{ThemeResource BaseTextBlockStyle}" Foreground="White" FontWeight="Bold" />
+                        <TextBlock Grid.Column="2" Text="{x:Bind description}" Style="{ThemeResource BaseTextBlockStyle}" Foreground="White" FontWeight="Bold" />
+                        <TextBlock Grid.Column="3" Text="{x:Bind startFormat}" Style="{ThemeResource BaseTextBlockStyle}" Foreground="White" FontWeight="Bold" />
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
+                    <Setter Property="Margin" Value="0,-10,0,-10"/>
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                 </Style>
             </ListView.ItemContainerStyle>
@@ -116,7 +98,7 @@
             <Ellipse x:Name="CircSplit" Grid.Column="2" Fill="#FFF4F4F5" HorizontalAlignment="Center" Height="40" Stroke="Black" VerticalAlignment="Top" Width="40"/>
         </StackPanel>
 
-        <Button x:Name="button" Content="Button" HorizontalAlignment="Right" Height="123" Margin="0,0,10.2,10" Grid.Row="0" VerticalAlignment="Bottom" Width="196" Background="#CCFF0000" Foreground="White" FontSize="48" Grid.Column="1"/>
+        <Button x:Name="button" Content="Button" HorizontalAlignment="Right" Height="123" Margin="0,0,10.2,10" Grid.Row="0" VerticalAlignment="Bottom" Width="196" Background="#CCFF0000" Foreground="White" FontSize="48" Grid.Column="1" Click="button_Click"/>
         <StackPanel x:Name="eventPanel" Grid.Column="1" HorizontalAlignment="Left" Margin="150.8,90,0,0" VerticalAlignment="Top" Visibility="Collapsed">
             <Button x:Name="button_done" Content="Ordre er færdig" HorizontalAlignment="Left" Margin="10,10" Height="100" Width="250" FontSize="26.667" FontWeight="Bold" Foreground="White" Background="#FF2A578D" Click="button_done_Click"/>
             <Button x:Name="button_error" Content="Opret fejl" HorizontalAlignment="Left" Margin="10,10" Height="100" Width="250" FontSize="26.667" FontWeight="Bold" Foreground="White" Background="#FF8D2A3C" Click="button_error_Click"/>

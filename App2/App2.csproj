@@ -102,22 +102,20 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Data\Item.cs" />
-    <Compile Include="Data\ItemsDataSource.cs" />
+    <Compile Include="Data\Event.cs" />
     <Compile Include="MySqlConnector.cs" />
     <Compile Include="Storage.cs" />
     <Compile Include="Config.xaml.cs">
       <DependentUpon>Config.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Machine.cs" />
-    <Compile Include="Process.cs" />
-    <Compile Include="Order.cs" />
+    <Compile Include="Data\Machine.cs" />
+    <Compile Include="Data\Process.cs" />
+    <Compile Include="Data\Order.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ViewModels\DataGridPageModel.cs" />
-    <Compile Include="ViewModels\ItemViewModel.cs" />
+    <Compile Include="ViewModels\EventViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
