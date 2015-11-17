@@ -71,6 +71,13 @@
                 <Style TargetType="ListViewItem">
                     <Setter Property="Margin" Value="0,-10,0,-10"/>
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListViewItem">
+                                <ListViewItemPresenter ContentMargin="20" Padding="20"/>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>

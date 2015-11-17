@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App2", "App2\App2.csproj", "{BF21FE07-2FCC-4285-BF14-B45107D8ED5D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySQLtoExcel", "..\..\..\Documents\Visual Studio 2015\Projects\MySQLtoExcel\MySQLtoExcel\MySQLtoExcel.csproj", "{7F348083-E219-455F-9F09-C03075851C11}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySQLtoExcel", "MySQLtoExcel\MySQLtoExcel.csproj", "{7F348083-E219-455F-9F09-C03075851C11}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
