@@ -13,7 +13,6 @@ namespace App2.Data
     {
         public int id { get; set; }
         public int listId { get; set; }
-        public int process { get; set; }
         public string code { get; set; }
         public string description { get; set; }
         public DateTime start { get; set; }
@@ -23,8 +22,18 @@ namespace App2.Data
         {
             get
             {
-                return start.ToString("H:mm   dd/MM");
+                return start.ToString("H:mm dd/MM");
             }
+        }
+
+        public static void Save(Event @event)
+        {
+            Storage.SetSetting("event", Storage.Serialize(@event));
+        }
+
+        public static Event Load()
+        {
+            return Storage.Deserialize<Event>(Storage.GetSetting<string>("event"));
         }
     }
 }

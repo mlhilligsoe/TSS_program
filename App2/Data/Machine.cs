@@ -10,13 +10,15 @@ namespace App2
     public class Machine
     {
         public string name;
+        public string processCode;
         public int nChannels;
         public Dictionary<int, bool> inputs;
         //private Dictionary<int, bool> old;
 
-        public Machine(string machineName)
+        public Machine(string machineName, string processCode) 
         {
             this.name = machineName;
+            this.processCode = processCode;
             this.nChannels = 0;
             inputs = new Dictionary<int, bool>();
             //old = new Dictionary<int, bool>();

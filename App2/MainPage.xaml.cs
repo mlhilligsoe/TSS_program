@@ -1,5 +1,4 @@
-﻿using MySql.Data.MySqlClient;
-using System;
+﻿using System;
 using Windows.Storage;
 using Windows.System;
 using Windows.UI.ViewManagement;
@@ -8,17 +7,8 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Microsoft.Maker.Serial;
 using Microsoft.Maker.RemoteWiring;
-using System.Runtime.Serialization;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-using Windows.UI;
-using System.Threading.Tasks;
-using MyToolkit.Model;
-using MyToolkit.Paging;
-using App2.ViewModels;
-using System.Collections.Generic;
 using App2.Data;
-using Windows.UI.Xaml.Data;
 using System.Collections.ObjectModel;
 
 namespace App2
@@ -96,8 +86,12 @@ namespace App2
             if (Storage.SettingExists("process"))
                 process = Process.Load();
 
-            
+
+
             // Update user interface
+            parseCommand("LOADORDERID 123");
+            parseCommand("CREATEPROCESS");
+            parseCommand("SHOWTOGGLES");
             updateGUI();
 
             //  DispatcherTimer setup
@@ -132,7 +126,7 @@ namespace App2
         // Configures machine parameters
         private void initMachine()
         {
-            machine = new Machine( (string) settings.Values["MachineName"] );
+            machine = new Machine( (string) settings.Values["MachineName"], (string)settings.Values["MachineProcessCode"]);
             machine.addInput(STARTUP);
             machine.addInput(NORMAL);
             machine.addInput(MANUAL);
@@ -152,7 +146,8 @@ namespace App2
             Storage.SetSetting<byte>("SplitPin", SPLIT);
             
             // Test Machine parameters
-            if (!Storage.SettingExists("MachineName"))
+            if (!Storage.SettingExists("MachineName") 
+                || !Storage.SettingExists("MachineProcessCode"))
             {
                 Frame.Navigate(typeof(Config));
             }
@@ -220,14 +215,14 @@ namespace App2
                     break;
                 case "LOADPROCESSID":
                     if (cmd.Length > 1)
-                        sql.loadProcess(int.Parse(cmd[1]), ref process, textBlockStatus);
+                        sql.loadProcess(int.Parse(cmd[1]), "abc", ref process, textBlockStatus);
                     updateGUI();
                     break;
 
 
                 case "LOADPROCESSORDERID":
                     if (cmd.Length > 1)
-                        sql.loadProcessFromOrder(int.Parse(cmd[1]), ref process, textBlockStatus);
+                        sql.loadProcessFromOrder(int.Parse(cmd[1]), "abc", ref process, textBlockStatus);
                     updateGUI();
                     break;
                 case "INSERTPROCESS":
@@ -258,7 +253,7 @@ namespace App2
                         // Else Create new order
                         if (order == null)
                         {
-                            order = new Order(ordrenr, cmd[0], "XXX");
+                            order = new Order(ordrenr, cmd[0], "XXX", 0);
                             sql.createOrder(order, textBlockStatus);
                         }
 
@@ -308,15 +303,15 @@ namespace App2
             {
                 textBlockProcQuantity.Text = process.quantity.ToString();
                 textBlockProcWaste.Text = process.waste.ToString();
-                textBlockProcStart.Text = process.start.ToString("H:mm   dd/MM");
-                textBlockProcComplete.Text = process.change.ToString("H:mm   dd/MM");
+                textBlockProcStart.Text = process.start.ToString("H:mm dd/MM");
+                textBlockProcComplete.Text = process.change.ToString("H:mm dd/MM");
             }
             else
             {
-                textBlockProcQuantity.Text = "";
-                textBlockProcWaste.Text = "";
-                textBlockProcStart.Text = "";
-                textBlockProcComplete.Text = "";
+                textBlockProcQuantity.Text = "-";
+                textBlockProcWaste.Text = "-";
+                textBlockProcStart.Text = "-";
+                textBlockProcComplete.Text = "-";
             }
 
 
@@ -326,19 +321,14 @@ namespace App2
                 textBlockOrderCode.Text = order.code;
                 textBlockOrderProduct.Text = order.product;
                 textBlockOrderQuantity.Text = order.quantity.ToString();
-                textBlockOrderStart.Text = order.start.ToString("H:mm   dd/MM");
-                if (order.complete)
-                    textBlockOrderComplete.Text = order.change.ToString("H:mm   dd/MM");
-                else
-                    textBlockOrderComplete.Text = "-";
+                textBlockOrderStart.Text = order.start.ToString("H:mm dd/MM");
             }
             else
             {
-                textBlockOrderCode.Text = "";
-                textBlockOrderProduct.Text = "";
-                textBlockOrderQuantity.Text = "";
-                textBlockOrderStart.Text = "";
-                textBlockOrderComplete.Text = "";
+                textBlockOrderCode.Text = "-";
+                textBlockOrderProduct.Text = "-";
+                textBlockOrderQuantity.Text = "-";
+                textBlockOrderStart.Text = "-";
             }
 
             // Update input lights
@@ -514,7 +504,54 @@ namespace App2
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
-            events.Add(new Data.Event() { listId = 1, start = DateTime.Now, code = "evt23", description = "Process 23 started." });
+            loadAllFromOrderCode("TestOrder");
+
+        }
+
+        private void loadAllFromOrderCode(string orderCode)
+        {
+            // Save stuff to DB
+            sql.updateOrder(order, textBlockStatus);
+            sql.updateProcess(process, textBlockStatus);
+            sql.updateEvents(events, textBlockStatus);
+
+            // Reset Stuff
+            order = null;
+            process = null;
+            events.Clear();
+
+            // Try to load order from DB
+            sql.loadOrder(orderCode, ref order, textBlockStatus);
+
+            // If order is still null, create new order
+            if (order == null)
+            {
+                textBlockStatus.Text += "Order er null, opretter ny";
+                int orderId = sql.createOrder(order, textBlockStatus);
+                order = new Order(orderId, orderCode, "", 0);
+            }
+            // Else try to load process
+            else
+            {
+                textBlockStatus.Text += "Loader process fra DB";
+                sql.loadProcessFromOrder(order.id, machine.processCode, ref process, textBlockStatus);
+                textBlockStatus.Text += "\nprocess.n_events: " + process.n_events;
+            }
+
+            // If process is still null, create new process
+            if (process == null) {
+                textBlockStatus.Text += "Process er null, opretter ny";
+                int processId = sql.createProcess(machine.processCode, order, textBlockStatus);
+                process = new Process(processId, machine.processCode);
+            }
+            // Else try to load events
+            else
+            {
+                textBlockStatus.Text += "Loader Events fra DBD";
+                sql.loadEventsFromProcess(process.id, process.n_events, ref events, textBlockStatus);
+            }
+
+            updateGUI();
         }
     }
 

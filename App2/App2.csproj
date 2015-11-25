@@ -102,6 +102,8 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Common\BindableBase.cs" />
+    <Compile Include="Common\DelegateCommand.cs" />
     <Compile Include="Data\Event.cs" />
     <Compile Include="MySqlConnector.cs" />
     <Compile Include="Storage.cs" />

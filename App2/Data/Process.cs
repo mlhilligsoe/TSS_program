@@ -1,4 +1,5 @@
-﻿using System;
+﻿using App2.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -15,8 +16,9 @@ public class Process
     public DateTime start;
     public DateTime change;
     public bool complete;
+    public int n_events;
 
-    public Process(int id, string code, DateTime start, DateTime change, bool complete = false, int quantity = 0, int waste = 0)
+    public Process(int id, string code, DateTime start, DateTime change, int n_events = 0, bool complete = false, int quantity = 0, int waste = 0)
     {
         this.id = id;
         this.code = code;
@@ -25,9 +27,10 @@ public class Process
         this.complete = complete;
         this.quantity = quantity;
         this.waste = waste;
+        this.n_events = n_events;
     }
 
-    public Process(int id, string code, DateTime start, int quantity = 0, int waste = 0)
+    public Process(int id, string code, DateTime start, int n_events = 0, int quantity = 0, int waste = 0)
     {
         this.id = id;
         this.code = code;
@@ -36,9 +39,10 @@ public class Process
         this.complete = false;
         this.quantity = quantity;
         this.waste = waste;
+        this.n_events = n_events;
     }
 
-    public Process(int id, string code, int quantity = 0, int waste = 0)
+    public Process(int id, string code, int n_events = 0, int quantity = 0, int waste = 0)
     {
         this.id = id;
         this.code = code;
@@ -47,6 +51,7 @@ public class Process
         this.complete = false;
         this.quantity = quantity;
         this.waste = waste;
+        this.n_events = n_events;
     }
 
     public static void Save(Process process)

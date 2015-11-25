@@ -18,66 +18,73 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="30*"/>
-            <ColumnDefinition Width="70*"/>
+            <ColumnDefinition Width="28*"/>
+            <ColumnDefinition Width="72*"/>
             <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
 
-        <StackPanel Orientation="Vertical"  Grid.Row="0" Grid.Column="0" Background="#FF075959">
-            <TextBlock x:Name="LabelOrderCode" TextWrapping="Wrap" VerticalAlignment="Top" Margin="18,18,18,0" FontSize="24" Width="220" TextAlignment="Left" Foreground="White" FontWeight="Bold" Text="Ordre Nr:"/>
-            <TextBlock x:Name="textBlockOrderCode" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" Margin="18,-6,18,0" FontSize="24" Width="220" TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
-            <TextBlock x:Name="LabelOrderProduct" TextWrapping="Wrap" Text="Produkt:" VerticalAlignment="Top" Margin="18,12,18,0" FontSize="16" Width="220" TextAlignment="Left" Foreground="White" FontWeight="Bold"/>
-            <TextBlock x:Name="textBlockOrderProduct" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" Margin="18,-2" FontSize="16" Width="220" TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
-            <TextBlock x:Name="LabelOrderQuantity" TextWrapping="Wrap" Text="Styktal:" VerticalAlignment="Top" Margin="18,12,18,0" FontSize="16" Width="220" TextAlignment="Left" Foreground="White" FontWeight="Bold"/>
-            <TextBlock x:Name="textBlockOrderQuantity" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" Margin="18,-2" FontSize="16" Width="220" TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
-            <TextBlock x:Name="LabelOrderStart" TextWrapping="Wrap" Text="Started:" VerticalAlignment="Top" Margin="18,12,18,0" FontSize="16" Width="220" TextAlignment="Left" Foreground="White" FontWeight="Bold"/>
-            <TextBlock x:Name="textBlockOrderStart" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" Margin="18,-2" FontSize="16" Width="220" TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
-            <TextBlock x:Name="LabelOrderComplete" TextWrapping="Wrap" Text="Færdiggjort:" VerticalAlignment="Top" Margin="18,12,18,0" FontSize="16" Width="220" TextAlignment="Left" Foreground="White" FontWeight="Bold"/>
-            <TextBlock x:Name="textBlockOrderComplete" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" Margin="22,-2,21.2,-2" FontSize="16" Width="220" TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
-            <TextBlock x:Name="LabelOrderComplete2" TextWrapping="Wrap" Text="Færdiggjort:" VerticalAlignment="Top" Margin="18,12,18,0" FontSize="16" Width="220" TextAlignment="Left" Foreground="White" FontWeight="Bold"/>
-            <TextBlock x:Name="textBlockOrderComplete2" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" Margin="22,-2,21.2,-2" FontSize="16" Width="220" TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
+        <Grid Grid.Row="0" Grid.Column="0" Background="#FF075959" Padding="5,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="0" Grid.Column="0" x:Name="LabelOrderCode" Text="Ordre Nr:" FontSize="28" Foreground="White" FontWeight="Bold"/>
+            <TextBlock Grid.Row="0" Grid.Column="1" x:Name="textBlockOrderCode" Text="-" FontSize="28" TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
+            <TextBlock Grid.Row="1" Grid.Column="0" x:Name="LabelOrderProduct" Text="Produkt:" FontSize="28" Foreground="White" FontWeight="Bold"/>
+            <TextBlock Grid.Row="1" Grid.Column="1" x:Name="textBlockOrderProduct" Text="-" FontSize="28" TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
+            <TextBlock Grid.Row="2" Grid.Column="0" x:Name="LabelOrderQuantity" Text="Styktal:" FontSize="28" Foreground="White" FontWeight="Bold"/>
+            <TextBlock Grid.Row="2" Grid.Column="1" x:Name="textBlockOrderQuantity" Text="-" FontSize="28" TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
+            <TextBlock Grid.Row="3" Grid.Column="0" x:Name="LabelOrderStart" Text="Started:" FontSize="28" Foreground="White" FontWeight="Bold"/>
+            <TextBlock Grid.Row="3" Grid.Column="1" x:Name="textBlockOrderStart" Text="-" FontSize="28" TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
 
-            <TextBlock x:Name="LabelProcStatus" TextWrapping="Wrap" Text="Status:" VerticalAlignment="Top" Margin="18,12,18,0" FontSize="24" Width="220" TextAlignment="Left" Foreground="White" FontWeight="Bold"/>
-            <TextBlock x:Name="textBlockProcStatus" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" Margin="22,-2,21.2,-2" FontSize="24" Width="220" TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
-            <TextBlock x:Name="LabelProcQuantity" TextWrapping="Wrap" Text="Produceret:" VerticalAlignment="Top" Margin="18,12,18,0" FontSize="16" Width="220" TextAlignment="Left" Foreground="White" FontWeight="Bold"/>
-            <TextBlock x:Name="textBlockProcQuantity" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" Margin="18,12,18,0" FontSize="16" Width="220" TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
-            <TextBlock x:Name="LabelProcWaste" TextWrapping="Wrap" Text="Spild:" VerticalAlignment="Top" Margin="22,-2,21.2,-2" FontSize="16" Width="220" TextAlignment="Left" Foreground="White" FontWeight="Bold"/>
-            <TextBlock x:Name="textBlockProcWaste" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" Margin="18,12,18,0" FontSize="16" Width="220" TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
-            <TextBlock x:Name="LabelProcStart" TextWrapping="Wrap" Text="Started:" VerticalAlignment="Top" Margin="22,-2,21.2,-2" FontSize="16" Width="220" TextAlignment="Left" Foreground="White" FontWeight="Bold"/>
-            <TextBlock x:Name="textBlockProcStart" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" Margin="18,12,18,0" FontSize="16" Width="220" TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
-            <TextBlock x:Name="LabelProcComplete" TextWrapping="Wrap" Text="Færdiggjort:" VerticalAlignment="Top" Margin="22,-2,21.2,-2" FontSize="16" Width="220" TextAlignment="Left" Foreground="White" FontWeight="Bold"/>
-            <TextBlock x:Name="textBlockProcComplete" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" Margin="18,12,18,0" FontSize="16" Width="220" TextAlignment="Right" Foreground="White" FontWeight="Bold" Height="56"/>
-        </StackPanel>
+            <TextBlock Grid.Row="4" Text=" " FontSize="28"/>
+            
+            <TextBlock Grid.Row="5" Grid.Column="0" x:Name="LabelProcStatus"  Text="Status:"   FontSize="28"   Foreground="White" FontWeight="Bold"/>
+            <TextBlock Grid.Row="5" Grid.Column="1" x:Name="textBlockProcStatus"  Text="-"   FontSize="28"  TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
+            <TextBlock Grid.Row="6" Grid.Column="0" x:Name="LabelProcQuantity"  Text="Prod.:"   FontSize="28"   Foreground="White" FontWeight="Bold"/>
+            <TextBlock Grid.Row="6" Grid.Column="1" x:Name="textBlockProcQuantity"  Text="-"  FontSize="28"  TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
+            <TextBlock Grid.Row="7" Grid.Column="0" x:Name="LabelProcWaste"  Text="Spild:"   FontSize="28"   Foreground="White" FontWeight="Bold"/>
+            <TextBlock Grid.Row="7" Grid.Column="1" x:Name="textBlockProcWaste"  Text="-"   FontSize="28"  TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
+            <TextBlock Grid.Row="8" Grid.Column="0" x:Name="LabelProcStart"  Text="Started:"   FontSize="28"   Foreground="White" FontWeight="Bold"/>
+            <TextBlock Grid.Row="8" Grid.Column="1" x:Name="textBlockProcStart"  Text="-"   FontSize="28"  TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
+            <TextBlock Grid.Row="9" Grid.Column="0" x:Name="LabelProcComplete"  Text="Færdig:"   FontSize="28"   Foreground="White" FontWeight="Bold"/>
+            <TextBlock Grid.Row="9" Grid.Column="1" x:Name="textBlockProcComplete"  Text="-"   FontSize="28"  TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
+        </Grid>
 
         <ListView Grid.Column="1" x:Name="EventListView" Grid.Row="0" Background="#FF0B8080" ItemsSource="{x:Bind events}">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="data:Event">
                     <Grid Background="#19FFFFFF">
-                        
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="35" />
-                            <ColumnDefinition Width="50" />
-                            <ColumnDefinition Width="100*" />
+                            <ColumnDefinition Width="60" />
+                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="1*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="{x:Bind listId}" Style="{ThemeResource BaseTextBlockStyle}" Foreground="White" FontWeight="Bold" />
-                        <TextBlock Grid.Column="1" Text="{x:Bind code}" Style="{ThemeResource BaseTextBlockStyle}" Foreground="White" FontWeight="Bold" />
-                        <TextBlock Grid.Column="2" Text="{x:Bind description}" Style="{ThemeResource BaseTextBlockStyle}" Foreground="White" FontWeight="Bold" />
-                        <TextBlock Grid.Column="3" Text="{x:Bind startFormat}" Style="{ThemeResource BaseTextBlockStyle}" Foreground="White" FontWeight="Bold" />
+                        <TextBlock Grid.Column="0" Text="{x:Bind listId}" Style="{ThemeResource BaseTextBlockStyle}" Foreground="White" FontWeight="Bold" FontSize="28" />
+                        <TextBlock Grid.Column="1" Text="{x:Bind code}" Style="{ThemeResource BaseTextBlockStyle}" Foreground="White" FontWeight="Bold" FontSize="28" />
+                        <TextBlock Grid.Column="2" Text="{x:Bind description}" Style="{ThemeResource BaseTextBlockStyle}" Foreground="White" FontWeight="Bold" FontSize="28" />
+                        <TextBlock Grid.Column="3" Text="{x:Bind startFormat}" Style="{ThemeResource BaseTextBlockStyle}" Foreground="White" FontWeight="Bold" FontSize="28"/>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
-                    <Setter Property="Margin" Value="0,-10,0,-10"/>
+                    <Setter Property="MinHeight" Value="5"/>
+                    <Setter Property="Margin" Value="2"/>
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="ListViewItem">
-                                <ListViewItemPresenter ContentMargin="20" Padding="20"/>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>

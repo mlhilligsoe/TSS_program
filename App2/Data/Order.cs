@@ -15,9 +15,9 @@ namespace App2
         public DateTime change;
         public bool complete;
         public int quantity;
-        
-        
-        public Order(int id, string code, string product,  DateTime start, DateTime change, bool complete = false, int quantity = 0)
+        public int n_processes;
+
+        public Order(int id, string code, string product,  DateTime start, DateTime change, int n_processes, bool complete = false, int quantity = 0)
         {
             this.id = id;
             this.code = code;
@@ -26,9 +26,10 @@ namespace App2
             this.change = change;
             this.complete = complete;
             this.quantity = quantity;
+            this.n_processes = n_processes;
         }
 
-        public Order(int id, string code, string product, DateTime start, bool complete = false, int quantity = 0)
+        public Order(int id, string code, string product, DateTime start, int n_processes, bool complete = false, int quantity = 0)
         {
             this.id = id;
             this.code = code;
@@ -37,9 +38,10 @@ namespace App2
             this.change = start;
             this.complete = complete;
             this.quantity = quantity;
+            this.n_processes = n_processes;
         }
 
-        public Order(int id, string code, string product, bool complete = false, int quantity = 0)
+        public Order(int id, string code, string product, int n_processes, bool complete = false, int quantity = 0)
         {
             this.id = id;
             this.code = code;
@@ -48,6 +50,7 @@ namespace App2
             this.change = start;
             this.complete = complete;
             this.quantity = quantity;
+            this.n_processes = n_processes;
         }
 
         public static void save(Order order)
