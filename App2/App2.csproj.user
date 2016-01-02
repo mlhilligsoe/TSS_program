@@ -8,14 +8,18 @@
     <UseAuthentication>false</UseAuthentication>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <RemoteDebugMachine>192.168.1.104</RemoteDebugMachine>
-    <RemoteDebugEnabled>false</RemoteDebugEnabled>
-    <UseAuthentication>false</UseAuthentication>
+    <RemoteDebugMachine>192.168.1.108:4018</RemoteDebugMachine>
+    <RemoteDebugEnabled>true</RemoteDebugEnabled>
+    <UseAuthentication>true</UseAuthentication>
   </PropertyGroup>
   <PropertyGroup>
     <AppxPackageIsForStore>False</AppxPackageIsForStore>
     <AppxShowAllApps>False</AppxShowAllApps>
     <AppxBuildConfigurationSelection>x86</AppxBuildConfigurationSelection>
+    <RemoteMachine0>TSS01</RemoteMachine0>
+    <UseAuthentication0>False</UseAuthentication0>
+    <RemoteMachine1>TSS01:4018</RemoteMachine1>
+    <UseAuthentication1>True</UseAuthentication1>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM'">
     <DeviceId>30F105C9-681E-420b-A277-7C086EAD8A4E</DeviceId>
@@ -24,6 +28,15 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DeviceId>30F105C9-681E-420b-A277-7C086EAD8A4E</DeviceId>
     <UseEmulator>false</UseEmulator>
-    <UseSimulator>true</UseSimulator>
+    <UseSimulator>false</UseSimulator>
+    <RemoteDebugMachine>TSS01</RemoteDebugMachine>
+    <RemoteDebugEnabled>true</RemoteDebugEnabled>
+    <UseAuthentication>false</UseAuthentication>
+    <CreateCleanLayout>false</CreateCleanLayout>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <RemoteDebugMachine>TSS01</RemoteDebugMachine>
+    <RemoteDebugEnabled>false</RemoteDebugEnabled>
+    <UseAuthentication>false</UseAuthentication>
   </PropertyGroup>
 </Project>

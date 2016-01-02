@@ -53,7 +53,7 @@ namespace App2
 
             // If events are saved, load events
             EventListView.ItemsSource = events;
-            events.Add(new Data.Event() { listId = 0, start = DateTime.Now, code = "evt12", description = "Process 12 started." });
+            //events.Add(new Data.Event() { listId = 0, start = DateTime.Now, code = "evt12", description = "Process 12 started." });
 
             // Fullscreen
             ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
@@ -170,9 +170,7 @@ namespace App2
             }
             
         }
-
-       
-
+        
         // Pasrse Commands received from keyboard/Barcode scanner
         public void parseCommand(string input)
         {
@@ -240,29 +238,14 @@ namespace App2
                 default:
                     if(cmd[0].Length == 13)
                     {
-                        int ordrenr = int.Parse(cmd[0].Remove(8).Substring(2));
-                        //string ordernr2 = ordernr.Substring(2);
-                        LabelOrderCode.Text = "Ordre Nr: " + ordrenr;
+                        //int ordrenr = int.Parse(cmd[0].Remove(8).Substring(2));
+                        string ordrenr = cmd[0].Remove(8).Substring(2);
 
-                        // Set current process to null
-                        order = null;
-
-                        // Try to load from SQL DB
-                        sql.loadOrder(ordrenr, ref order, textBlockStatus);
-                        
-                        // Else Create new order
-                        if (order == null)
-                        {
-                            order = new Order(ordrenr, cmd[0], "XXX", 0);
-                            sql.createOrder(order, textBlockStatus);
-                        }
-
-                        // Start new process
-                        int process_id = sql.createProcess("Udstykning", order, textBlockStatus);
-                        process = new Process(process_id, "Udstykning");
-
-
+                        saveAll();
+                        clearAll();
+                        loadAllFromOrderCode(ordrenr);
                         updateGUI();
+
                     }
                     break;
 
@@ -270,9 +253,7 @@ namespace App2
                 }
          
         }
-
         
-
         // Called on keyup from command textbox
         private void textBox_Command_KeyUp(object sender, KeyRoutedEventArgs e)
         {
@@ -510,16 +491,6 @@ namespace App2
 
         private void loadAllFromOrderCode(string orderCode)
         {
-            // Save stuff to DB
-            sql.updateOrder(order, textBlockStatus);
-            sql.updateProcess(process, textBlockStatus);
-            sql.updateEvents(events, textBlockStatus);
-
-            // Reset Stuff
-            order = null;
-            process = null;
-            events.Clear();
-
             // Try to load order from DB
             sql.loadOrder(orderCode, ref order, textBlockStatus);
 
@@ -527,15 +498,16 @@ namespace App2
             if (order == null)
             {
                 textBlockStatus.Text += "Order er null, opretter ny";
-                int orderId = sql.createOrder(order, textBlockStatus);
-                order = new Order(orderId, orderCode, "", 0);
+                order = new Order(-1, orderCode, "", 0);
+                textBlockStatus.Text += order.start.ToString();
+                order.id = sql.createOrder(order, textBlockStatus);
             }
             // Else try to load process
             else
             {
                 textBlockStatus.Text += "Loader process fra DB";
                 sql.loadProcessFromOrder(order.id, machine.processCode, ref process, textBlockStatus);
-                textBlockStatus.Text += "\nprocess.n_events: " + process.n_events;
+                //textBlockStatus.Text += "\nprocess.n_events: " + process.n_events;
             }
 
             // If process is still null, create new process
@@ -547,11 +519,26 @@ namespace App2
             // Else try to load events
             else
             {
-                textBlockStatus.Text += "Loader Events fra DBD";
+                textBlockStatus.Text += "Loader Events fra DBz";
                 sql.loadEventsFromProcess(process.id, process.n_events, ref events, textBlockStatus);
             }
 
-            updateGUI();
+        }
+
+        private void saveAll()
+        {
+            // Save stuff to DB
+            sql.updateOrder(order, textBlockStatus);
+            sql.updateProcess(process, textBlockStatus);
+            sql.updateEvents(events, textBlockStatus);
+        }
+
+        private void clearAll()
+        {
+            // Reset Stuff
+            order = null;
+            process = null;
+            events.Clear();
         }
     }
 

@@ -269,13 +269,13 @@ namespace App2
             try
             {
                 conn.Open();
-
+                status.Text += order.start.ToString();
                 string stm = string.Format("INSERT INTO `bosch`.`orders` "
-                                            + "(`order_id`, `order_code`, `order_product`, `order_quantity`, "
+                                            + "(`order_code`, `order_product`, `order_quantity`, "
                                             + "`order_start`, `order_change`, `order_complete`, `order_n_processes`) "
-                                            + "VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}'); "
+                                            + "VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}'); "
                                             + "SELECT last_insert_id()",
-                                            order.id, order.code, order.product, order.quantity,
+                                            order.code, order.product, order.quantity,
                                             order.start.ToString("yyyy-MM-dd H:mm:ss"), order.change.ToString("yyyy-MM-dd H:mm:ss"), order.complete ? 1 : 0, 0);
 
                 MySqlCommand cmd = new MySqlCommand(stm, conn);
@@ -307,37 +307,46 @@ namespace App2
 
         public bool updateOrder(Order order, TextBlock status)
         {
-
-            try
+            if (order != null)
             {
-                conn.Open();
 
-                string stm = string.Format("UPDATE `bosch`.`orders` "
-                                         + "SET `order_change` = '{0}', `order_complete` = '{1}', `order_n_processes` = '{2}'"
-                                         + "WHERE `orders`.`order_id` = {3};",
-                                            order.change, order.complete?1:0, order.n_processes, order.id);
+                try
+                {
+                    conn.Open();
 
-                MySqlCommand cmd = new MySqlCommand(stm, conn);
-                cmd.ExecuteReader();
+                    string stm = string.Format("UPDATE `bosch`.`orders` "
+                                             + "SET `order_change` = '{0}', `order_complete` = '{1}', `order_n_processes` = '{2}'"
+                                             + "WHERE `orders`.`order_id` = {3};",
+                                                order.change, order.complete ? 1 : 0, order.n_processes, order.id);
+
+                    MySqlCommand cmd = new MySqlCommand(stm, conn);
+                    cmd.ExecuteReader();
+
+                }
+                catch (MySqlException ex)
+                {
+                    status.Text = "Could not update order in DB. \nConnection status: " + conn.State + " \nException: " + ex.Message;
+                    return false;
+                }
+                finally
+                {
+                    if (conn != null)
+                        conn.Close();
+                }
+
+                return true;
 
             }
-            catch (MySqlException ex)
-            {
-                status.Text = "Could not update order in DB. \nConnection status: " + conn.State + " \nException: " + ex.Message;
+            else {
                 return false;
             }
-            finally
-            {
-                if (conn != null)
-                    conn.Close();
-            }
-
-            return true;
         }
 
         public bool updateProcess(Process process, TextBlock status)
         {
-            
+            if(process != null)
+            {
+
             try
             {
                 conn.Open();
@@ -365,6 +374,12 @@ namespace App2
             }
 
             return true;
+
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public bool loadEventsFromProcess(int processId, int noEvents, ref ObservableCollection<Event> events, TextBlock status)
