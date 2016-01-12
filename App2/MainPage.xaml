@@ -9,7 +9,33 @@
     xmlns:data="using:App2.Data">
 
     <Page.Resources>
-        
+        <DataTemplate x:Key="OpenEventTemplate" x:DataType="data:Event">
+            <Grid Background="#19FFFFFF">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="{x:Bind code}" Style="{ThemeResource BaseTextBlockStyle}" Foreground="White" FontWeight="Bold" FontSize="28" />
+                <TextBlock Grid.Column="1" Text="{x:Bind description}" Style="{ThemeResource BaseTextBlockStyle}" Foreground="White" FontWeight="Bold" FontSize="28" />
+                <TextBlock Grid.Column="2" Text="{x:Bind startFormat}" Style="{ThemeResource BaseTextBlockStyle}" Foreground="White" FontWeight="Bold" FontSize="28"/>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="CompleteEventTemplate" x:DataType="data:Event">
+            <Grid Background="Black">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="{x:Bind code}" Style="{ThemeResource BaseTextBlockStyle}" Foreground="White" FontWeight="Bold" FontSize="28" />
+                <TextBlock Grid.Column="1" Text="{x:Bind description}" Style="{ThemeResource BaseTextBlockStyle}" Foreground="White" FontWeight="Bold" FontSize="28" />
+                <TextBlock Grid.Column="2" Text="{x:Bind startFormat}" Style="{ThemeResource BaseTextBlockStyle}" Foreground="White" FontWeight="Bold" FontSize="28"/>
+            </Grid>
+        </DataTemplate>
+
+        <local:EventListTemplateSelector x:Key="EventListTemplateSelector" CompleteEventTemplate="{StaticResource CompleteEventTemplate}" OpenEventTemplate="{StaticResource OpenEventTemplate}" />
     </Page.Resources>
     
     <Grid x:Name="rootGrid" Background="#555555" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
@@ -18,8 +44,8 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="28*"/>
-            <ColumnDefinition Width="72*"/>
+            <ColumnDefinition Width="45*"/>
+            <ColumnDefinition Width="55*"/>
             <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
 
@@ -40,46 +66,30 @@
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Row="0" Grid.Column="0" x:Name="LabelOrderCode" Text="Ordre Nr:" FontSize="28" Foreground="White" FontWeight="Bold"/>
-            <TextBlock Grid.Row="0" Grid.Column="1" x:Name="textBlockOrderCode" Text="-" FontSize="28" TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
-            <TextBlock Grid.Row="1" Grid.Column="0" x:Name="LabelOrderProduct" Text="Produkt:" FontSize="28" Foreground="White" FontWeight="Bold"/>
-            <TextBlock Grid.Row="1" Grid.Column="1" x:Name="textBlockOrderProduct" Text="-" FontSize="28" TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
-            <TextBlock Grid.Row="2" Grid.Column="0" x:Name="LabelOrderQuantity" Text="Styktal:" FontSize="28" Foreground="White" FontWeight="Bold"/>
-            <TextBlock Grid.Row="2" Grid.Column="1" x:Name="textBlockOrderQuantity" Text="-" FontSize="28" TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
-            <TextBlock Grid.Row="3" Grid.Column="0" x:Name="LabelOrderStart" Text="Started:" FontSize="28" Foreground="White" FontWeight="Bold"/>
-            <TextBlock Grid.Row="3" Grid.Column="1" x:Name="textBlockOrderStart" Text="-" FontSize="28" TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
+            <TextBlock Grid.Row="0" Grid.Column="0" x:Name="LabelOrderCode" Text="Ordre Nr:" FontSize="48" Foreground="White" FontWeight="Bold"/>
+            <TextBlock Grid.Row="0" Grid.Column="1" x:Name="textBlockOrderCode" Text="-" FontSize="48" TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
+            <TextBlock Grid.Row="1" Grid.Column="0" x:Name="LabelOrderProduct" Text="Produkt:" FontSize="48" Foreground="White" FontWeight="Bold"/>
+            <TextBlock Grid.Row="1" Grid.Column="1" x:Name="textBlockOrderProduct" Text="-" FontSize="48" TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
+            <TextBlock Grid.Row="2" Grid.Column="0" x:Name="LabelOrderQuantity" Text="Styktal:" FontSize="48" Foreground="White" FontWeight="Bold"/>
+            <TextBlock Grid.Row="2" Grid.Column="1" x:Name="textBlockOrderQuantity" Text="-" FontSize="48" TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
+            <TextBlock Grid.Row="3" Grid.Column="0" x:Name="LabelOrderStart" Text="Started:" FontSize="48" Foreground="White" FontWeight="Bold"/>
+            <TextBlock Grid.Row="3" Grid.Column="1" x:Name="textBlockOrderStart" Text="-" FontSize="48" TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
 
-            <TextBlock Grid.Row="4" Text=" " FontSize="28"/>
+            <TextBlock Grid.Row="4" Text=" " FontSize="48"/>
             
-            <TextBlock Grid.Row="5" Grid.Column="0" x:Name="LabelProcStatus"  Text="Status:"   FontSize="28"   Foreground="White" FontWeight="Bold"/>
-            <TextBlock Grid.Row="5" Grid.Column="1" x:Name="textBlockProcStatus"  Text="-"   FontSize="28"  TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
-            <TextBlock Grid.Row="6" Grid.Column="0" x:Name="LabelProcQuantity"  Text="Prod.:"   FontSize="28"   Foreground="White" FontWeight="Bold"/>
-            <TextBlock Grid.Row="6" Grid.Column="1" x:Name="textBlockProcQuantity"  Text="-"  FontSize="28"  TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
-            <TextBlock Grid.Row="7" Grid.Column="0" x:Name="LabelProcWaste"  Text="Spild:"   FontSize="28"   Foreground="White" FontWeight="Bold"/>
-            <TextBlock Grid.Row="7" Grid.Column="1" x:Name="textBlockProcWaste"  Text="-"   FontSize="28"  TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
-            <TextBlock Grid.Row="8" Grid.Column="0" x:Name="LabelProcStart"  Text="Started:"   FontSize="28"   Foreground="White" FontWeight="Bold"/>
-            <TextBlock Grid.Row="8" Grid.Column="1" x:Name="textBlockProcStart"  Text="-"   FontSize="28"  TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
-            <TextBlock Grid.Row="9" Grid.Column="0" x:Name="LabelProcComplete"  Text="Færdig:"   FontSize="28"   Foreground="White" FontWeight="Bold"/>
-            <TextBlock Grid.Row="9" Grid.Column="1" x:Name="textBlockProcComplete"  Text="-"   FontSize="28"  TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
+            <TextBlock Grid.Row="5" Grid.Column="0" x:Name="LabelProcStatus"  Text="Status:"   FontSize="48"   Foreground="White" FontWeight="Bold"/>
+            <TextBlock Grid.Row="5" Grid.Column="1" x:Name="textBlockProcStatus"  Text="-"   FontSize="48"  TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
+            <TextBlock Grid.Row="6" Grid.Column="0" x:Name="LabelProcQuantity"  Text="Prod.:"   FontSize="48"   Foreground="White" FontWeight="Bold"/>
+            <TextBlock Grid.Row="6" Grid.Column="1" x:Name="textBlockProcQuantity"  Text="-"  FontSize="48"  TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
+            <TextBlock Grid.Row="7" Grid.Column="0" x:Name="LabelProcWaste"  Text="Spild:"   FontSize="48"   Foreground="White" FontWeight="Bold"/>
+            <TextBlock Grid.Row="7" Grid.Column="1" x:Name="textBlockProcWaste"  Text="-"   FontSize="48"  TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
+            <TextBlock Grid.Row="8" Grid.Column="0" x:Name="LabelProcStart"  Text="Started:"   FontSize="48"   Foreground="White" FontWeight="Bold"/>
+            <TextBlock Grid.Row="8" Grid.Column="1" x:Name="textBlockProcStart"  Text="-"   FontSize="48"  TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
+            <TextBlock Grid.Row="9" Grid.Column="0" x:Name="LabelProcComplete"  Text="Færdig:"   FontSize="48"   Foreground="White" FontWeight="Bold"/>
+            <TextBlock Grid.Row="9" Grid.Column="1" x:Name="textBlockProcComplete"  Text="-"   FontSize="48"  TextAlignment="Right" Foreground="White" FontWeight="Bold"/>
         </Grid>
 
-        <ListView Grid.Column="1" x:Name="EventListView" Grid.Row="0" Background="#FF0B8080" ItemsSource="{x:Bind events}">
-            <ListView.ItemTemplate>
-                <DataTemplate x:DataType="data:Event">
-                    <Grid Background="#19FFFFFF">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="60" />
-                            <ColumnDefinition Width="100" />
-                            <ColumnDefinition Width="1*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="{x:Bind listId}" Style="{ThemeResource BaseTextBlockStyle}" Foreground="White" FontWeight="Bold" FontSize="28" />
-                        <TextBlock Grid.Column="1" Text="{x:Bind code}" Style="{ThemeResource BaseTextBlockStyle}" Foreground="White" FontWeight="Bold" FontSize="28" />
-                        <TextBlock Grid.Column="2" Text="{x:Bind description}" Style="{ThemeResource BaseTextBlockStyle}" Foreground="White" FontWeight="Bold" FontSize="28" />
-                        <TextBlock Grid.Column="3" Text="{x:Bind startFormat}" Style="{ThemeResource BaseTextBlockStyle}" Foreground="White" FontWeight="Bold" FontSize="28"/>
-                    </Grid>
-                </DataTemplate>
-            </ListView.ItemTemplate>
+        <ListView Grid.Column="1" x:Name="EventListView" Grid.Row="0" Background="#FF0B8080" ItemsSource="{x:Bind events}" ItemTemplateSelector="{StaticResource EventListTemplateSelector}">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="MinHeight" Value="5"/>
@@ -113,10 +123,14 @@
         </StackPanel>
 
         <Button x:Name="button" Content="Button" HorizontalAlignment="Right" Height="123" Margin="0,0,10.2,10" Grid.Row="0" VerticalAlignment="Bottom" Width="196" Background="#CCFF0000" Foreground="White" FontSize="48" Grid.Column="1" Click="button_Click"/>
-        <StackPanel x:Name="eventPanel" Grid.Column="1" HorizontalAlignment="Left" Margin="150.8,90,0,0" VerticalAlignment="Top" Visibility="Collapsed">
-            <Button x:Name="button_done" Content="Ordre er færdig" HorizontalAlignment="Left" Margin="10,10" Height="100" Width="250" FontSize="26.667" FontWeight="Bold" Foreground="White" Background="#FF2A578D" Click="button_done_Click"/>
-            <Button x:Name="button_error" Content="Opret fejl" HorizontalAlignment="Left" Margin="10,10" Height="100" Width="250" FontSize="26.667" FontWeight="Bold" Foreground="White" Background="#FF8D2A3C" Click="button_error_Click"/>
+        <StackPanel x:Name="eventPanel" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Visible">
+            <Button x:Name="button_done" Content="Ordre er færdig" HorizontalAlignment="Left" Margin="10,10" Height="100" Width="450" FontSize="42.667" FontWeight="Bold" Foreground="White" Background="#FF2A578D" Click="button_done_Click"/>
+            <Button x:Name="button_error1" Content="Fejltype 1" HorizontalAlignment="Left" Margin="10,10" Height="100" Width="450" FontSize="42.667" FontWeight="Bold" Foreground="White" Background="#FF8D2A3C" Click="button_error1_Click"/>
+            <Button x:Name="button_error2" Content="Fejltype 2" HorizontalAlignment="Left" Margin="10,10" Height="100" Width="450" FontSize="42.667" FontWeight="Bold" Foreground="White" Background="#FF8D2A3C" Click="button_error2_Click"/>
+            <Button x:Name="button_error3" Content="Fejltype 3" HorizontalAlignment="Left" Margin="10,10" Height="100" Width="450" FontSize="42.667" FontWeight="Bold" Foreground="White" Background="#FF8D2A3C" Click="button_error3_Click"/>
+            <Button x:Name="button_error4" Content="Fejltype 4" HorizontalAlignment="Left" Margin="10,10" Height="100" Width="450" FontSize="42.667" FontWeight="Bold" Foreground="White" Background="#FF8D2A3C" Click="button_error4_Click"/>
         </StackPanel>
 
     </Grid>
 </Page>
+

@@ -30,7 +30,7 @@
     <UseEmulator>false</UseEmulator>
     <UseSimulator>false</UseSimulator>
     <RemoteDebugMachine>TSS01</RemoteDebugMachine>
-    <RemoteDebugEnabled>true</RemoteDebugEnabled>
+    <RemoteDebugEnabled>false</RemoteDebugEnabled>
     <UseAuthentication>false</UseAuthentication>
     <CreateCleanLayout>false</CreateCleanLayout>
   </PropertyGroup>

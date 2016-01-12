@@ -199,7 +199,7 @@ namespace App2
                                             rdr.GetBoolean("process_complete"),
                                             rdr.GetInt32("process_quantity"),
                                             rdr.GetInt32("process_waste"));
-                    status.Text += "\nprocess_n_events: " + rdr.GetInt32("process_n_events");
+                    //status.Text += "\nprocess_n_events: " + rdr.GetInt32("process_n_events");
                 }
             }
             catch (MySqlException ex)
@@ -269,7 +269,7 @@ namespace App2
             try
             {
                 conn.Open();
-                status.Text += order.start.ToString();
+                //status.Text += order.start.ToString();
                 string stm = string.Format("INSERT INTO `bosch`.`orders` "
                                             + "(`order_code`, `order_product`, `order_quantity`, "
                                             + "`order_start`, `order_change`, `order_complete`, `order_n_processes`) "
@@ -391,7 +391,7 @@ namespace App2
                 conn.Open();
 
                 string stm = "SELECT * FROM `events` WHERE `event_process_id` = " + processId.ToString() + " ORDER BY `event_id` DESC LIMIT " + noEvents.ToString();
-                status.Text += stm;
+                //status.Text += stm;
                 MySqlCommand cmd = new MySqlCommand(stm, conn);
                 rdr = cmd.ExecuteReader();
 

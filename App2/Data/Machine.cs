@@ -45,9 +45,9 @@ namespace App2
         {
             //old[inputPin] = inputs[inputPin];
             if (inputValue == PinState.HIGH)
-                inputs[inputPin] = true;
-            else
                 inputs[inputPin] = false;
+            else
+                inputs[inputPin] = true;
         }
 
         public bool getState(int inputPin)

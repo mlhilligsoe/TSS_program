@@ -22,11 +22,11 @@ namespace App2
             getSetting<string>("MachineName", textBox_MachineName);
             getSetting<string>("MachineProcessCode", textBox_MachineProcessCode);
 
-            getSetting<int>("StartupPin", textBox_StartupPin);
-            getSetting<int>("NormalPin", textBox_NormalPin);
-            getSetting<int>("ManualPin", textBox_ManualPin);
-            getSetting<int>("LatchPin", textBox_LatchPin);
-            getSetting<int>("SplitPin", textBox_SplitPin);
+            getSetting<byte>("StartupPin", textBox_StartupPin);
+            getSetting<byte>("NormalPin", textBox_NormalPin);
+            getSetting<byte>("ManualPin", textBox_ManualPin);
+            getSetting<byte>("LatchPin", textBox_LatchPin);
+            getSetting<byte>("SplitPin", textBox_SplitPin);
 
             getSetting<string>("SQLServer", textBox_SQLServer);
             getSetting<string>("SQLDB", textBox_SQLDB);
