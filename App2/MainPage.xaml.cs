@@ -119,7 +119,7 @@ namespace App2
                 process = Process.Load();
 
             // Update user interface
-            parseCommand("DEBUG");
+            //parseCommand("DEBUG");
             //parseCommand("CREATEPROCESS");
             //parseCommand("SHOWTOGGLES");
             updateGUI();
@@ -401,7 +401,7 @@ namespace App2
                     Arduino_DigitalPinUpdated(STARTUP, toggleSwitch.IsOn ? PinState.HIGH : PinState.LOW);
                     break;
                 case "normal":
-                    Arduino_DigitalPinUpdated(NORMAL, toggleSwitch.IsOn ? PinState.HIGH : PinState.LOW);
+                    //Arduino_DigitalPinUpdated(NORMAL, toggleSwitch.IsOn ? PinState.HIGH : PinState.LOW);
                     break;
                 case "manual":
                     Arduino_DigitalPinUpdated(MANUAL, toggleSwitch.IsOn ? PinState.HIGH : PinState.LOW);
@@ -424,19 +424,20 @@ namespace App2
                     {
                         textBlockStatus.Text += pin.ToString();
                         machine.update(pin, pinValue);
-
-                        if (process != null)
+                        
+                        switch (pin)
                         {
-
-                            switch (pin)
-                            {
-                                case STARTUP:
-
-                                    break;
-                                case NORMAL:
-                                    // Init timer
-                                    //splitTimer = new DispatcherTimer();
-
+                            case STARTUP:
+                                if(machine.getState(STARTUP) == false && machine.getState(MANUAL) == false)
+                                    Arduino_DigitalPinUpdated(NORMAL, PinState.LOW);
+                                else
+                                    Arduino_DigitalPinUpdated(NORMAL, PinState.HIGH);
+                                break;
+                            case NORMAL:
+                                // Init timer
+                                //splitTimer = new DispatcherTimer();
+                                if (process != null)
+                                {
                                     for (int i = 0; i < events.Count; i++)
                                     {
                                         textBlockStatus.Text += "\n" + i + ": " + events[i].complete;
@@ -446,22 +447,33 @@ namespace App2
                                             events[i].complete = true;
                                         }
                                     }
+                                }
+                                break;
+                            case MANUAL:
+                                if (machine.getState(STARTUP) == false && machine.getState(MANUAL) == false)
+                                    Arduino_DigitalPinUpdated(NORMAL, PinState.LOW);
+                                else
+                                    Arduino_DigitalPinUpdated(NORMAL, PinState.HIGH);
+                                break;
+                            case LATCH:
 
-                                    break;
-                                case MANUAL:
+                                if (process != null)
+                                {
+                                    if (machine.getState(LATCH) == true)
+                                        process.hasLatched = true;
+                                }
 
-                                    break;
-                                case LATCH:
-
-                                    break;
-                                case SPLIT:
-
+                                break;
+                            case SPLIT:
+                                if (process != null)
+                                {
                                     if (machine.getState(NORMAL) == true && machine.getState(SPLIT) == true)
                                     {
                                         // Count up in produced or waste
-                                        if (machine.getState(LATCH) == true)
+                                        if (process.hasLatched == true)
                                         {
                                             process.quantity++;
+                                            process.hasLatched = false;
                                         }
                                         else
                                         {
@@ -474,13 +486,11 @@ namespace App2
                                         splitTimer.Interval = new TimeSpan(0, 0, 5);
                                         splitTimer.Start();
                                     }
-
-
-
-                                    break;
-                            }
+                                }
+                                    
+                                break;
                         }
-
+                        
                         updateGUI();
                 
                     });
@@ -566,7 +576,7 @@ namespace App2
         {
             eventPanel.Visibility = Visibility.Collapsed;
             if (process != null){
-                int newEventId = sql.createEvent("evt3", "Fejltype 3", process, textBlockStatus);
+                int newEventId = sql.createEvent("evt1", "Fejltype 1", process, textBlockStatus);
                 sql.loadEventsFromProcess(process.id, process.n_events, ref events, textBlockStatus);
             }
             saveAll();
@@ -578,7 +588,7 @@ namespace App2
             eventPanel.Visibility = Visibility.Collapsed;
             if (process != null)
             {
-                int newEventId = sql.createEvent("evt3", "Fejltype 3", process, textBlockStatus);
+                int newEventId = sql.createEvent("evt2", "Fejltype 2", process, textBlockStatus);
                 sql.loadEventsFromProcess(process.id, process.n_events, ref events, textBlockStatus);
             }
             saveAll();
@@ -600,7 +610,7 @@ namespace App2
         {
             eventPanel.Visibility = Visibility.Collapsed;
             if (process != null){
-                sql.createEvent("evt3", "Fejltype 3", process, textBlockStatus);
+                sql.createEvent("evt4", "Fejltype 4", process, textBlockStatus);
                 sql.loadEventsFromProcess(process.id, process.n_events, ref events, textBlockStatus);
             }
             saveAll();

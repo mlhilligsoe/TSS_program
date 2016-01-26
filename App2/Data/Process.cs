@@ -17,6 +17,7 @@ public class Process
     public DateTime change;
     public bool complete;
     public int n_events;
+    public bool hasLatched;
 
     public Process(int id, string code, DateTime start, DateTime change, int n_events = 0, bool complete = false, int quantity = 0, int waste = 0)
     {
@@ -28,6 +29,7 @@ public class Process
         this.quantity = quantity;
         this.waste = waste;
         this.n_events = n_events;
+        this.hasLatched = false;
     }
 
     public Process(int id, string code, DateTime start, int n_events = 0, int quantity = 0, int waste = 0)
@@ -40,6 +42,7 @@ public class Process
         this.quantity = quantity;
         this.waste = waste;
         this.n_events = n_events;
+        this.hasLatched = false;
     }
 
     public Process(int id, string code, int n_events = 0, int quantity = 0, int waste = 0)
@@ -52,6 +55,7 @@ public class Process
         this.quantity = quantity;
         this.waste = waste;
         this.n_events = n_events;
+        this.hasLatched = false;
     }
 
     public static void Save(Process process)

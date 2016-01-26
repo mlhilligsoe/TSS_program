@@ -49,7 +49,7 @@
             <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
 
-        <Grid Grid.Row="0" Grid.Column="0" Background="#FF075959" Padding="5,0">
+        <Grid Grid.Row="0" Grid.Column="0" Background="#FF075959" Padding="30,10,20,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
@@ -122,8 +122,8 @@
             <Ellipse x:Name="CircSplit" Grid.Column="2" Fill="#FFF4F4F5" HorizontalAlignment="Center" Height="40" Stroke="Black" VerticalAlignment="Top" Width="40"/>
         </StackPanel>
 
-        <Button x:Name="button" Content="Button" HorizontalAlignment="Right" Height="123" Margin="0,0,10.2,10" Grid.Row="0" VerticalAlignment="Bottom" Width="196" Background="#CCFF0000" Foreground="White" FontSize="48" Grid.Column="1" Click="button_Click"/>
-        <StackPanel x:Name="eventPanel" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Visible">
+        <Button x:Name="button" Content="Button" HorizontalAlignment="Right" Height="123" Margin="0,0,10.2,10" Grid.Row="0" VerticalAlignment="Bottom" Width="196" Background="#CCFF0000" Foreground="White" FontSize="48" Grid.Column="1" Click="button_Click" Visibility="Collapsed"/>
+        <StackPanel x:Name="eventPanel" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed">
             <Button x:Name="button_done" Content="Ordre er færdig" HorizontalAlignment="Left" Margin="10,10" Height="100" Width="450" FontSize="42.667" FontWeight="Bold" Foreground="White" Background="#FF2A578D" Click="button_done_Click"/>
             <Button x:Name="button_error1" Content="Fejltype 1" HorizontalAlignment="Left" Margin="10,10" Height="100" Width="450" FontSize="42.667" FontWeight="Bold" Foreground="White" Background="#FF8D2A3C" Click="button_error1_Click"/>
             <Button x:Name="button_error2" Content="Fejltype 2" HorizontalAlignment="Left" Margin="10,10" Height="100" Width="450" FontSize="42.667" FontWeight="Bold" Foreground="White" Background="#FF8D2A3C" Click="button_error2_Click"/>
