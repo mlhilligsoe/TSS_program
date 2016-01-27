@@ -1,10 +1,10 @@
-﻿using App2.Data;
+﻿using TSSDataLogger.Data;
 using MySql.Data.MySqlClient;
 using System.Collections.ObjectModel;
 using System.Text;
 using Windows.UI.Xaml.Controls;
 
-namespace App2
+namespace TSSDataLogger
 {
     class MySqlConnector
     {

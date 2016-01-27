@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace App2
+namespace TSSDataLogger
 {
     public class Machine
     {

@@ -29,10 +29,11 @@
     <DeviceId>30F105C9-681E-420b-A277-7C086EAD8A4E</DeviceId>
     <UseEmulator>false</UseEmulator>
     <UseSimulator>false</UseSimulator>
-    <RemoteDebugMachine>TSS01</RemoteDebugMachine>
+    <RemoteDebugMachine>192.168.0.104:4020 (TSS01)</RemoteDebugMachine>
     <RemoteDebugEnabled>true</RemoteDebugEnabled>
     <UseAuthentication>false</UseAuthentication>
     <CreateCleanLayout>false</CreateCleanLayout>
+    <AuthenticationMode>None</AuthenticationMode>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <RemoteDebugMachine>TSS01</RemoteDebugMachine>

@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="f69e17ba-9693-4baf-af35-c7f09190d26a" Publisher="CN=amminex" Version="1.0.2.0" />
+  <Identity Name="f69e17ba-9693-4baf-af35-c7f09190d26a" Publisher="CN=MT" Version="1.0.3.0" />
   <mp:PhoneIdentity PhoneProductId="f69e17ba-9693-4baf-af35-c7f09190d26a" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
-    <DisplayName>App2</DisplayName>
-    <PublisherDisplayName>amminex</PublisherDisplayName>
+    <DisplayName>TSS Data Logger</DisplayName>
+    <PublisherDisplayName>MT</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   <Dependencies>
@@ -14,11 +14,14 @@
     <Resource Language="x-generate" />
   </Resources>
   <Applications>
-    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="App2.App">
-      <uap:VisualElements DisplayName="App2" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="App2" BackgroundColor="transparent">
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="TSSDataLogger.App">
+      <uap:VisualElements DisplayName="TSS Data Logger" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="TSS Data Logger" BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png">
         </uap:DefaultTile>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
+        <uap:InitialRotationPreference>
+          <uap:Rotation Preference="landscape" />
+        </uap:InitialRotationPreference>
       </uap:VisualElements>
     </Application>
   </Applications>

@@ -28,7 +28,7 @@ using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using Windows.UI.Xaml.Data;
 
-namespace App2.Common
+namespace TSSDataLogger.Common
 {
     /// <summary>
     /// Implementation of <see cref="INotifyPropertyChanged"/> to simplify models.

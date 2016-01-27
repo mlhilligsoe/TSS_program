@@ -8,13 +8,14 @@ using Windows.UI.Xaml.Input;
 using Microsoft.Maker.Serial;
 using Microsoft.Maker.RemoteWiring;
 using Windows.UI.Xaml.Media;
-using App2.Data;
+using TSSDataLogger.Data;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
 using System.Diagnostics;
+using TSSDataLogger.ContentDialogs;
 
-namespace App2
+namespace TSSDataLogger
 {
     public class EventListTemplateSelector : DataTemplateSelector
     {
@@ -134,6 +135,7 @@ namespace App2
             arduinoSignalTimer.Interval = new TimeSpan(0, 0, 0, 0, 3000);
             arduinoSignalTimer.Start();
 
+            splitTimer_Tick(null, null);
         }
 
         private void arduinoSignal_Tick(object sender, object e)
@@ -553,7 +555,6 @@ namespace App2
             arduino.pinMode("A0", PinMode.ANALOG);
 
             arduino.DigitalPinUpdated += Arduino_DigitalPinUpdated;
-            arduino.AnalogPinUpdated += Arduino_AnalogPinUpdated;
             
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {textBlockStatus.Text = "\nMicrocontroller Connection Ready";});
@@ -565,71 +566,44 @@ namespace App2
         }
 
         // SplitTimer method
-        private void splitTimer_Tick(object sender, object e)
+        private async void splitTimer_Tick(object sender, object e)
         {
-            saveAll();
             splitTimer.Stop();
-            eventPanel.Visibility = Visibility.Visible;
-        }
-
-        private void button_error1_Click(object sender, RoutedEventArgs e)
-        {
-            eventPanel.Visibility = Visibility.Collapsed;
-            if (process != null){
-                int newEventId = sql.createEvent("evt1", "Fejltype 1", process, textBlockStatus);
-                sql.loadEventsFromProcess(process.id, process.n_events, ref events, textBlockStatus);
-            }
             saveAll();
-            updateGUI();
-        }
 
-        private void button_error2_Click(object sender, RoutedEventArgs e)
-        {
-            eventPanel.Visibility = Visibility.Collapsed;
-            if (process != null)
+            ProcessStopContentDialog processStopContentDialog = new ProcessStopContentDialog();
+            await processStopContentDialog.ShowAsync();
+
+            switch(processStopContentDialog.Result)
             {
-                int newEventId = sql.createEvent("evt2", "Fejltype 2", process, textBlockStatus);
-                sql.loadEventsFromProcess(process.id, process.n_events, ref events, textBlockStatus);
+                case ProcessStopResult.NewBar:
+                    sql.createEvent("NewBar", "Ny Stang", process, textBlockStatus);
+                    sql.loadEventsFromProcess(process.id, process.n_events, ref events, textBlockStatus);
+                    saveAll();
+                    break;
+                case ProcessStopResult.Complete:
+                    order.complete = true;
+                    saveAll();
+                    clearAll();
+                    // showScanOrderContentDialog();
+                    break;
+                case ProcessStopResult.Pause:
+                    sql.createEvent("Pause", "Process Pause", process, textBlockStatus);
+                    sql.loadEventsFromProcess(process.id, process.n_events, ref events, textBlockStatus);
+                    saveAll();
+                    break;
+                case ProcessStopResult.Error1:
+                    sql.createEvent("Error1", "Fejltype 1", process, textBlockStatus);
+                    sql.loadEventsFromProcess(process.id, process.n_events, ref events, textBlockStatus);
+                    saveAll();
+                    break;
+                case ProcessStopResult.Error2:
+                    sql.createEvent("Error2", "Fejltyp 2", process, textBlockStatus);
+                    sql.loadEventsFromProcess(process.id, process.n_events, ref events, textBlockStatus);
+                    saveAll();
+                    break;
             }
-            saveAll();
-            updateGUI();
-        }
 
-        private void button_error3_Click(object sender, RoutedEventArgs e)
-        {
-            eventPanel.Visibility = Visibility.Collapsed;
-            if (process != null){
-                int newEventId = sql.createEvent("evt3", "Fejltype 3", process, textBlockStatus);
-                sql.loadEventsFromProcess(process.id, process.n_events, ref events, textBlockStatus);
-            }
-            saveAll();
-            updateGUI();
-        }
-
-        private void button_error4_Click(object sender, RoutedEventArgs e)
-        {
-            eventPanel.Visibility = Visibility.Collapsed;
-            if (process != null){
-                sql.createEvent("evt4", "Fejltype 4", process, textBlockStatus);
-                sql.loadEventsFromProcess(process.id, process.n_events, ref events, textBlockStatus);
-            }
-            saveAll();
-            updateGUI();
-        }
-
-        private void button_done_Click(object sender, RoutedEventArgs e)
-        {
-            eventPanel.Visibility = Visibility.Collapsed;
-            if(order != null) 
-                order.complete = true;
-            saveAll();
-            clearAll();
-            updateGUI();
-        }
-
-        private void button_Click(object sender, RoutedEventArgs e)
-        {
-            loadAllFromOrderCode("TestOrder");
             updateGUI();
         }
 
@@ -685,10 +659,6 @@ namespace App2
             events.Clear();
             splitTimer.Stop();
         }
-
-        
     }
-
-    
 }
 

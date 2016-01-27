@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Globalization.DateTimeFormatting;
 
-namespace App2.Data
+namespace TSSDataLogger.Data
 {
     [DataContract, KnownType(typeof(DateTime))]
     public class Event

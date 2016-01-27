@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using App2.Data;
+using TSSDataLogger.Data;
 using Windows.Globalization.DateTimeFormatting;
 
-namespace App2.ViewModels
+namespace TSSDataLogger.ViewModels
 {
     public class EventViewModel
     {
