@@ -33,7 +33,7 @@
     <RemoteDebugEnabled>true</RemoteDebugEnabled>
     <UseAuthentication>false</UseAuthentication>
     <CreateCleanLayout>false</CreateCleanLayout>
-    <AuthenticationMode>None</AuthenticationMode>
+    <AuthenticationMode>Windows</AuthenticationMode>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <RemoteDebugMachine>TSS01</RemoteDebugMachine>

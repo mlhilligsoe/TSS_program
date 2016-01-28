@@ -3,45 +3,56 @@ using MySql.Data.MySqlClient;
 using System.Collections.ObjectModel;
 using System.Text;
 using Windows.UI.Xaml.Controls;
+using System.Diagnostics;
 
 namespace TSSDataLogger
 {
     class MySqlConnector
     {
         private MySqlConnection conn;
+        private MainPage mainPage;
 
-        public MySqlConnector()
+        public MySqlConnector(MainPage mainPage)
         {
+            Debug.WriteLine("MySqlConnector");
+
+            this.mainPage = mainPage;
+
             // Required for SQL connection to use latin characterset
             EncodingProvider ppp = CodePagesEncodingProvider.Instance;
             Encoding.RegisterProvider(ppp);
 
             // Configure connection
-            conn = new MySqlConnection("Server=" + Storage.GetSetting<string>("SQLServer") //127.0.0.1
-                                    + ";Database=" + Storage.GetSetting<string>("SQLDB") //bosch
-                                    + ";Uid=" + Storage.GetSetting<string>("SQLUser") //bosch
-                                    + ";Pwd=" + Storage.GetSetting<string>("SQLPass") //12345
+            conn = new MySqlConnection("Server=" + Storage.GetSetting<string>("SQLServer") // 192.168.0.100
+                                    + ";Database=" + Storage.GetSetting<string>("SQLDB") // bosch
+                                    + ";Uid=" + Storage.GetSetting<string>("SQLUser") // bosch
+                                    + ";Pwd=" + Storage.GetSetting<string>("SQLPass") // 12345
                                     + ";SslMode=None"
                                     + ";Convert Zero Datetime=True;");
         }
 
-        // Configures, Opens and Tests MySQL connection
-        public bool testConnection(TextBlock status)
+        /* Verifies that the MySQL connection is Working */
+        public bool testConnection()
         {
-            // Try establisgn a connection
+            Debug.WriteLine("MySqlConnector.testConnection");
+
+            // Try establishing a connection
             try
             {
                 conn.Open();
 
                 if (conn.State != ConnectionState.Open)
                 {
-                    status.Text = "Could not load order from DB. \nConnection status: " + conn.State;
+                    Debug.WriteLine("Could not connect to DB. \nConnection state: " + conn.State);
+                    mainPage.setStatus("Could not connect to DB. Please check configuration.");
+
                     return false;
                 }
             }
             catch (MySqlException ex)
             {
-                status.Text = "Could not load order from DB. \nConnection status: " + conn.State + " \nException: " + ex.Message;
+                Debug.WriteLine("Could not connect to DB. \nConnection state: " + conn.State + " \nException: " + ex.Message);
+                mainPage.setStatus("Could not connect to DB. Please check configuration.");
                 return false;
             }
             finally
@@ -55,6 +66,8 @@ namespace TSSDataLogger
 
         public bool loadOrder(int id, ref Order order, TextBlock status)
         {
+            Debug.WriteLine("MySqlConnector.loadOrder");
+
             MySqlDataReader rdr = null;
 
             try
@@ -79,7 +92,8 @@ namespace TSSDataLogger
             }
             catch (MySqlException ex)
             {
-                status.Text = "Could not load order from DB. \nConnection status: " + conn.State + " \nException: " + ex.Message;
+                Debug.WriteLine("Could not load order from DB. \nConnection status: " + conn.State + " \nException: " + ex.Message);
+                mainPage.setStatus("Could not load order from DB.");
                 return false;
             }
             finally
@@ -97,6 +111,8 @@ namespace TSSDataLogger
 
         public bool loadOrder(string code, ref Order order, TextBlock status)
         {
+            Debug.WriteLine("MySqlConnector.loadOrder");
+
             MySqlDataReader rdr = null;
 
             try
@@ -121,7 +137,8 @@ namespace TSSDataLogger
             }
             catch (MySqlException ex)
             {
-                status.Text = "Could not load order from DB. \nConnection status: " + conn.State + " \nException: " + ex.Message;
+                Debug.WriteLine("Could not load order from DB. \nConnection status: " + conn.State + " \nException: " + ex.Message);
+                mainPage.setStatus("Could not load order from DB.");
                 return false;
             }
             finally
@@ -138,6 +155,8 @@ namespace TSSDataLogger
 
         public bool loadProcess(int id, string code, ref Process process, TextBlock status)
         {
+            Debug.WriteLine("MySqlConnector.loadProcess");
+
             MySqlDataReader rdr = null;
 
             try
@@ -162,7 +181,8 @@ namespace TSSDataLogger
             }
             catch (MySqlException ex)
             {
-                status.Text = "Could not load process from DB. \nConnection status: " + conn.State + " \nException: " + ex.Message;
+                Debug.WriteLine("Could not load process from DB. \nConnection status: " + conn.State + " \nException: " + ex.Message);
+                mainPage.setStatus("Could not load process from DB.");
                 return false;
             }
             finally
@@ -179,6 +199,8 @@ namespace TSSDataLogger
 
         public bool loadProcessFromOrder(int id, string code, ref Process process, TextBlock status)
         {
+            Debug.WriteLine("MySqlConnector.loadProcessFromOrder");
+
             MySqlDataReader rdr = null;
 
             try
@@ -204,7 +226,8 @@ namespace TSSDataLogger
             }
             catch (MySqlException ex)
             {
-                status.Text = "Could not load process from DB. \nConnection status: " + conn.State + " \nException: " + ex.Message;
+                Debug.WriteLine("Could not load process from DB. \nConnection status: " + conn.State + " \nException: " + ex.Message);
+                mainPage.setStatus("Could not load process from DB.");
                 return false;
             }
             finally
@@ -221,6 +244,8 @@ namespace TSSDataLogger
 
         public int createProcess(string process_code, Order order, TextBlock status)
         {
+            Debug.WriteLine("MySqlConnector.createProcess");
+
             MySqlDataReader rdr = null;
             int r;
 
@@ -246,7 +271,8 @@ namespace TSSDataLogger
             }
             catch (MySqlException ex)
             {
-                status.Text = "Could not insert process into DB. \nConnection status: " + conn.State + " \nException: " + ex.Message;
+                Debug.WriteLine("Could not insert process into DB. \nConnection status: " + conn.State + " \nException: " + ex.Message);
+                mainPage.setStatus("Could not insert process into DB.");
                 return -1;
             }
             finally
@@ -263,6 +289,8 @@ namespace TSSDataLogger
 
         public int createOrder(Order order, TextBlock status)
         {
+            Debug.WriteLine("MySqlConnector.createOrder");
+
             MySqlDataReader rdr = null;
             int r;
 
@@ -290,7 +318,8 @@ namespace TSSDataLogger
             }
             catch (MySqlException ex)
             {
-                status.Text = "Could not create insert order into DB. \nConnection status: " + conn.State + " \nException: " + ex.Message;
+                Debug.WriteLine("Could not create insert order into DB. \nConnection status: " + conn.State + " \nException: " + ex.Message);
+                mainPage.setStatus("Could not create insert order into DB.");
                 return -1;
             }
             finally
@@ -307,6 +336,8 @@ namespace TSSDataLogger
 
         public bool updateOrder(Order order, TextBlock status)
         {
+            Debug.WriteLine("MySqlConnector.updateOrder");
+
             if (order != null)
             {
 
@@ -325,7 +356,8 @@ namespace TSSDataLogger
                 }
                 catch (MySqlException ex)
                 {
-                    status.Text = "Could not update order in DB. \nConnection status: " + conn.State + " \nException: " + ex.Message;
+                    Debug.WriteLine("Could not update order in DB. \nConnection status: " + conn.State + " \nException: " + ex.Message);
+                    mainPage.setStatus("Could not update order in DB.");
                     return false;
                 }
                 finally
@@ -344,7 +376,9 @@ namespace TSSDataLogger
 
         public bool updateProcess(Process process, TextBlock status)
         {
-            if(process != null)
+            Debug.WriteLine("MySqlConnector.updateProcess");
+
+            if (process != null)
             {
 
             try
@@ -364,8 +398,9 @@ namespace TSSDataLogger
             }
             catch (MySqlException ex)
             {
-                status.Text = "Could not update process in DB. \nConnection status: " + conn.State + " \nException: " + ex.Message;
-                return false;
+                Debug.WriteLine("Could not update process in DB. \nConnection status: " + conn.State + " \nException: " + ex.Message);
+                    mainPage.setStatus("Could not update process in DB.");
+                    return false;
             }
             finally
             {
@@ -414,7 +449,8 @@ namespace TSSDataLogger
             }
             catch (MySqlException ex)
             {
-                status.Text = "Could not load event from DB. \nConnection status: " + conn.State + " \nException: " + ex.Message;
+                Debug.WriteLine("Could not load events from DB. \nConnection status: " + conn.State + " \nException: " + ex.Message);
+                mainPage.setStatus("Could not load events from DB.");
                 return false;
             }
             finally
@@ -468,7 +504,8 @@ namespace TSSDataLogger
             }
             catch (MySqlException ex)
             {
-                status.Text = "Could not insert event into DB. \nConnection status: " + conn.State + " \nException: " + ex.Message;
+                Debug.WriteLine("Could not insert event into DB. \nConnection status: " + conn.State + " \nException: " + ex.Message);
+                mainPage.setStatus("Could not insert event into DB.");
                 return -1;
             }
             finally
@@ -515,7 +552,8 @@ namespace TSSDataLogger
             }
             catch (MySqlException ex)
             {
-                status.Text = "Could not update event in DB. \nConnection status: " + conn.State + " \nException: " + ex.Message;
+                Debug.WriteLine("Could not update event in DB. \nConnection status: " + conn.State + " \nException: " + ex.Message);
+                mainPage.setStatus("Could not update event in DB.");
                 return false;
             }
             finally

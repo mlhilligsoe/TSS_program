@@ -43,12 +43,12 @@
     <Grid x:Name="rootGrid" Background="#555555" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <Grid.RowDefinitions>
             <RowDefinition/>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="45*"/>
             <ColumnDefinition Width="55*"/>
-            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
 
         <!-- Order and Process pane -->
@@ -57,6 +57,8 @@
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
+            
+            <!-- Property TextBlocks -->
             <StackPanel Orientation="Vertical" Grid.Column="0">
                 <TextBlock Text="Ordre Nr:" Style="{StaticResource PropertyTextBlockStyle}"/>
                 <TextBlock Text="Produkt:" Style="{StaticResource PropertyTextBlockStyle}"/>
@@ -69,6 +71,8 @@
                 <TextBlock Text="Started:"   Style="{StaticResource PropertyTextBlockStyle}"/>
                 <TextBlock Text="Færdig:"   Style="{StaticResource PropertyTextBlockStyle}"/>
             </StackPanel>
+
+            <!-- Value TextBlocks -->
             <StackPanel Orientation="Vertical" Grid.Column="1">
                 <TextBlock x:Name="textBlockOrderCode" Text="-" Style="{StaticResource ValueTextBlockStyle}"/>
                 <TextBlock x:Name="textBlockOrderProduct" Text="-" Style="{StaticResource ValueTextBlockStyle}"/>
@@ -87,39 +91,30 @@
         <ListView Grid.Column="1" x:Name="EventListView" Grid.Row="0" Background="#FF0B8080" ItemsSource="{x:Bind events}" ItemTemplateSelector="{StaticResource EventListTemplateSelector}" ItemContainerStyle="{StaticResource EventListViewItemStyle}"/>
         
         <!-- Command pane -->
-        <TextBox x:Name="textBoxCommand" Grid.Row="1" TextWrapping="Wrap" Width="480" Margin="0,10,10,10" Foreground="White" FontSize="18" FontWeight="Bold" KeyUp="textBox_Command_KeyUp" Height="36" VerticalAlignment="Bottom" HorizontalAlignment="Right" Grid.ColumnSpan="3"/>
+        <TextBox x:Name="textBoxCommand" Grid.Row="1" TextWrapping="Wrap" Width="480" Margin="0,10,10,10" Foreground="White" FontSize="18" FontWeight="Bold" KeyUp="textBoxCommand_KeyUp" Height="36" VerticalAlignment="Bottom" HorizontalAlignment="Right" Grid.ColumnSpan="3"/>
         <TextBlock x:Name="textBlockStatus" Grid.Row="1" TextWrapping="Wrap" Text="Status:" Width="480" Margin="10,10,0,10" Foreground="White" FontSize="18" Grid.ColumnSpan="2" Height="36" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
 
         <!-- ToogleSwitches -->
         <StackPanel x:Name="toggleSwitches" Visibility="Collapsed" Orientation="Vertical"  Grid.Row="0" Grid.Column="2" HorizontalAlignment="Left" Background="#FF18A48B" Padding="5,0,60,0">
             <ToggleSwitch x:Name="startup" Header="Opstart" Toggled="toggleSwitch_Toggled" Style="{StaticResource SignalToggleSwitchStyle}"/>
-            <ToggleSwitch x:Name="normal" Header="Auto" Toggled="toggleSwitch_Toggled" Style="{StaticResource SignalToggleSwitchStyle}"/>
+            <ToggleSwitch x:Name="auto" Header="Auto" Toggled="toggleSwitch_Toggled" Style="{StaticResource SignalToggleSwitchStyle}"/>
             <ToggleSwitch x:Name="manual" Header="Manual" Toggled="toggleSwitch_Toggled" Style="{StaticResource SignalToggleSwitchStyle}"/>
             <ToggleSwitch x:Name="latch" Header="Klap" Toggled="toggleSwitch_Toggled" Style="{StaticResource SignalToggleSwitchStyle}"/>
-            <ToggleSwitch x:Name="split" Header="Udstyk" Toggled="toggleSwitch_Toggled" Style="{StaticResource SignalToggleSwitchStyle}"/>
+            <ToggleSwitch x:Name="split" Header="Afstik" Toggled="toggleSwitch_Toggled" Style="{StaticResource SignalToggleSwitchStyle}"/>
         </StackPanel>
         
         <!-- Input signal indicators -->
         <StackPanel Orientation="Vertical"  Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right" Background="#FF18A48B" Padding="10,0,10,10">
             <TextBlock x:Name="LabelStartUp" Text="Startup" Style="{StaticResource SignalIndicatorTextBlockStyle}"/>
             <Ellipse x:Name="CircStartup" Style="{StaticResource SignalIndicatorEllipseStyle}"/>
-            <TextBlock x:Name="LabelNormal" Text="Normal" Style="{StaticResource SignalIndicatorTextBlockStyle}"/>
-            <Ellipse x:Name="CircNormal" Style="{StaticResource SignalIndicatorEllipseStyle}"/>
+            <TextBlock x:Name="LabelAuto" Text="Auto" Style="{StaticResource SignalIndicatorTextBlockStyle}"/>
+            <Ellipse x:Name="CircAuto" Style="{StaticResource SignalIndicatorEllipseStyle}"/>
             <TextBlock x:Name="LabelManual" Text="Manual" Style="{StaticResource SignalIndicatorTextBlockStyle}"/>
             <Ellipse x:Name="CircManual" Style="{StaticResource SignalIndicatorEllipseStyle}"/>
             <TextBlock x:Name="LabelLatch" Text="Latch" Style="{StaticResource SignalIndicatorTextBlockStyle}"/>
             <Ellipse x:Name="CircLatch" Style="{StaticResource SignalIndicatorEllipseStyle}"/>
             <TextBlock x:Name="LabelSplit" Text="Split" Style="{StaticResource SignalIndicatorTextBlockStyle}"/>
             <Ellipse x:Name="CircSplit" Style="{StaticResource SignalIndicatorEllipseStyle}"/>
-        </StackPanel>
-
-        <!-- ProcessStop Dialog -->
-        <StackPanel x:Name="eventPanel" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed">
-            <Button x:Name="button_done" Content="Ordre er færdig" HorizontalAlignment="Left" Margin="10,10" Height="100" Width="450" FontSize="42.667" FontWeight="Bold" Foreground="White" Background="#FF2A578D" Click="button_done_Click"/>
-            <Button x:Name="button_error1" Content="Fejltype 1" HorizontalAlignment="Left" Margin="10,10" Height="100" Width="450" FontSize="42.667" FontWeight="Bold" Foreground="White" Background="#FF8D2A3C" Click="button_error1_Click"/>
-            <Button x:Name="button_error2" Content="Fejltype 2" HorizontalAlignment="Left" Margin="10,10" Height="100" Width="450" FontSize="42.667" FontWeight="Bold" Foreground="White" Background="#FF8D2A3C" Click="button_error2_Click"/>
-            <Button x:Name="button_error3" Content="Fejltype 3" HorizontalAlignment="Left" Margin="10,10" Height="100" Width="450" FontSize="42.667" FontWeight="Bold" Foreground="White" Background="#FF8D2A3C" Click="button_error3_Click"/>
-            <Button x:Name="button_error4" Content="Fejltype 4" HorizontalAlignment="Left" Margin="10,10" Height="100" Width="450" FontSize="42.667" FontWeight="Bold" Foreground="White" Background="#FF8D2A3C" Click="button_error4_Click"/>
         </StackPanel>
 
     </Grid>

@@ -5,10 +5,14 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using TSSDataLogger;
 
 [DataContract, KnownType(typeof(DateTime))]
 public class Process
 {
+    private MainPage mainPage;
+    private bool active = false;
+
     public int id;
     public string code;
     public int quantity;
@@ -19,8 +23,14 @@ public class Process
     public int n_events;
     public bool hasLatched;
 
-    public Process(int id, string code, DateTime start, DateTime change, int n_events = 0, bool complete = false, int quantity = 0, int waste = 0)
+    public Process(MainPage mainPage)
     {
+        this.mainPage = mainPage;
+    }
+
+    public void load(int id, string code, DateTime start, DateTime change, int n_events = 0, bool complete = false, int quantity = 0, int waste = 0)
+    {
+        active = true;
         this.id = id;
         this.code = code;
         this.start = new DateTime(start.Ticks, DateTimeKind.Local);
@@ -32,30 +42,14 @@ public class Process
         this.hasLatched = false;
     }
 
-    public Process(int id, string code, DateTime start, int n_events = 0, int quantity = 0, int waste = 0)
+    public void unload()
     {
-        this.id = id;
-        this.code = code;
-        this.start = new DateTime(start.Ticks, DateTimeKind.Local);
-        this.change = this.start;
-        this.complete = false;
-        this.quantity = quantity;
-        this.waste = waste;
-        this.n_events = n_events;
-        this.hasLatched = false;
+        active = false;
     }
 
-    public Process(int id, string code, int n_events = 0, int quantity = 0, int waste = 0)
+    public bool isLoaded()
     {
-        this.id = id;
-        this.code = code;
-        this.start = new DateTime(DateTime.Now.Ticks, DateTimeKind.Local);
-        this.change = this.start;
-        this.complete = false;
-        this.quantity = quantity;
-        this.waste = waste;
-        this.n_events = n_events;
-        this.hasLatched = false;
+        return active;
     }
 
     public static void Save(Process process)
