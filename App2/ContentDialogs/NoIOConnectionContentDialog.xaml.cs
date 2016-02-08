@@ -26,34 +26,8 @@ namespace TSSDataLogger.ContentDialogs
         {
             this.mainPage = mainPage;
 
-            this.Opened += NoIOConnectionContentDialog_Opened;
-            this.Closed += NoIOConnectionContentDialog_Closed;
-
-            this.KeyUp += NoIOConnectionContentDialog_KeyUp;
-            this.KeyDown += NoIOConnectionContentDialog_KeyDown;
-
             this.InitializeComponent();
 
-        }
-
-        private void NoIOConnectionContentDialog_KeyDown(object sender, KeyRoutedEventArgs e)
-        {
-            
-        }
-
-        private void NoIOConnectionContentDialog_KeyUp(object sender, KeyRoutedEventArgs e)
-        {
-            mainPage.MainPage_KeyUp(sender, e);
-        }
-
-        private void NoIOConnectionContentDialog_Closed(ContentDialog sender, ContentDialogClosedEventArgs args)
-        {
-            //mainPage.contentDialogIsActive = false;
-        }
-
-        private void NoIOConnectionContentDialog_Opened(ContentDialog sender, ContentDialogOpenedEventArgs args)
-        {
-            //mainPage.contentDialogIsActive = true;
         }
 
         private void okButton_Click(object sender, RoutedEventArgs e)

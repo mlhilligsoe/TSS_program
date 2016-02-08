@@ -90,39 +90,39 @@ namespace TSSDataLogger
                             }
                             else
                                 process.waste++;
-                            
-                            process.change = DateTime.Now;
-                            order.change = DateTime.Now;
 
+                            if (process.stopped)
+                                runEvent();
+
+                            events[events.Count - 1].change = DateTime.Now;
+                            process.change = DateTime.Now;
+                            process.stopped = false;
+                            order.change = DateTime.Now;
+                            
                             // Restart timer
-                            Debug.WriteLine("Logic.machineStateChange->splitTimer.Change(5000, 5000)");
                             mainPage.hideProcessStopContentDialog();
                             splitTimer.Change(5000, 5000);
                         }
-
-                        // If SPLIT occours while machineState.AUTO is true and events are present, then previous event must be completed.
-                        if (events.Count > 0)
-                        {
-                            events[events.Count - 1].change = DateTime.Now;
-                            events[events.Count - 1].complete = true;
-                        }
                     }
-                    
+
                     break;
             }
             
             mainPage.updateGUI();
         }
 
-        public void newBarEvent()
+        public void runEvent()
         {
-            events.Add(new Event("NyStang", DateTime.Now, DateTime.Now, true));
+            if(events.Count > 0)
+                events[events.Count - 1].complete = true;
+            events.Add(new Event(machine.processCode, DateTime.Now, DateTime.Now, false));
             sql.createEvent(events[events.Count-1]);
         }
 
         public void completeOrder()
         {
-            order.complete = true;
+            events[events.Count-1].complete = true;
+            process.complete = true;
             saveAll();
             clearAll();
             mainPage.updateGUI();
@@ -130,20 +130,23 @@ namespace TSSDataLogger
 
         public void pauseEvent()
         {
-            events.Add(new Event("Pause", DateTime.Now, DateTime.Now, false));
+            events.Add(new Event("Pause", process.change, DateTime.Now, false));
             sql.createEvent(events[events.Count - 1]);
+            mainPage.setStatus("PROCESS PAUSET - Fortsæt process med ny stang");
         }
 
         public void error1Event()
         {
-            events.Add(new Event("FejlType1", DateTime.Now, DateTime.Now, false));
+            events.Add(new Event("Fejl Type 1", process.change, DateTime.Now, false));
             sql.createEvent(events[events.Count - 1]);
+            mainPage.setStatus("PROCESS FEJL TYPE 1 - Fortsæt process med ny stang");
         }
 
         public void error2Event()
         {
-            events.Add(new Event("FejlTyp2", DateTime.Now, DateTime.Now, false));
+            events.Add(new Event("Fejl Type 2", process.change, DateTime.Now, false));
             sql.createEvent(events[events.Count - 1]);
+            mainPage.setStatus("PROCESS FEJL TYPE 2 - Fortsæt process med ny stang");
         }
 
 
@@ -153,10 +156,12 @@ namespace TSSDataLogger
             Debug.WriteLine("Logic.splitTimer_Tick");
 
             splitTimer.Change(Timeout.Infinite, Timeout.Infinite);
+
+            events[events.Count-1].complete = true;
+            process.stopped = true;
             saveAll();
             
             mainPage.showProcessStopContentDialog();
-            
             mainPage.updateGUI();
         }
 
@@ -175,7 +180,7 @@ namespace TSSDataLogger
             {
                 Debug.WriteLine("Ordre er null, opretter ny");
                 mainPage.setStatus("Ordre er null, opretter ny");
-                order.load(-1, orderCode, new DateTime(), new DateTime(), false);
+                order.load(-1, orderCode, DateTime.Now, DateTime.Now, false);
                 sql.createOrder();
             }
             // Else try to load process

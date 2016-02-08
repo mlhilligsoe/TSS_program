@@ -25,33 +25,7 @@ namespace TSSDataLogger.ContentDialogs
         {
             this.mainPage = mainPage;
 
-            this.Opened += LoadOrderContentDialog_Opened;
-            this.Closed += LoadOrderContentDialog_Closed;
-
-            this.KeyUp += LoadOrderContentDialog_KeyUp;
-            this.KeyDown += LoadOrderContentDialog_KeyDown;
-
             this.InitializeComponent();
-        }
-
-        private void LoadOrderContentDialog_KeyDown(object sender, KeyRoutedEventArgs e)
-        {
-            
-        }
-
-        private void LoadOrderContentDialog_KeyUp(object sender, KeyRoutedEventArgs e)
-        {
-            mainPage.MainPage_KeyUp(sender, e);
-        }
-
-        private void LoadOrderContentDialog_Closed(ContentDialog sender, ContentDialogClosedEventArgs args)
-        {
-            //mainPage.contentDialogIsActive = false;
-        }
-
-        private void LoadOrderContentDialog_Opened(ContentDialog sender, ContentDialogOpenedEventArgs args)
-        {
-            //mainPage.contentDialogIsActive = true;
         }
 
         private void okButton_Click(object sender, RoutedEventArgs e)

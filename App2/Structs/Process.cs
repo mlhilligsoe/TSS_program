@@ -11,6 +11,7 @@ using TSSDataLogger;
 public class Process
 {
     private bool active = false;
+    public bool stopped { get; set; }
 
     // Object variables
     public int id { get; set; }
@@ -45,6 +46,7 @@ public class Process
         this.complete = complete;
         this.quantity = quantity;
         this.waste = waste;
+        this.stopped = true;
     }
 
     public void load(string code, DateTime start, DateTime change, bool complete = false, int quantity = 0, int waste = 0)
@@ -57,6 +59,7 @@ public class Process
         this.complete = complete;
         this.quantity = quantity;
         this.waste = waste;
+        this.stopped = true;
     }
 
     public void unload()

@@ -84,9 +84,9 @@ namespace TSSDataLogger
 
                 if(conn.State == ConnectionState.Open){
                     string stm = string.Format("INSERT INTO `bosch`.`orders` "
-                                            + "(`order_code`, `order_start`, `order_change`) "
-                                            + "VALUES ('{0}', '{1}', '{2}')",
-                                            order.dbCode, order.dbStart, order.dbChange);
+                                            + "(`order_code`, `order_start`, `order_change`, `order_product`, `order_quantity`) "
+                                            + "VALUES ('{0}', '{1}', '{2}', '{3}', '{4}')",
+                                            order.dbCode, order.dbStart, order.dbChange, order.product, order.quantity);
                     Debug.WriteLine("stm: " + stm);
 
                     MySqlCommand cmd = new MySqlCommand(stm, conn);

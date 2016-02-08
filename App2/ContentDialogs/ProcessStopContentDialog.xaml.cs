@@ -27,27 +27,7 @@ namespace TSSDataLogger.ContentDialogs
             this.mainPage = mainPage;
             this.logic = logic;
 
-            this.Opened += ProcessStopContentDialog_Opened;
-            this.Closed += ProcessStopContentDialog_Closed;
-
-            this.KeyUp += ProcessStopContentDialog_KeyUp;
-
             this.InitializeComponent();
-        }
-
-        private void ProcessStopContentDialog_KeyUp(object sender, KeyRoutedEventArgs e)
-        {
-            mainPage.MainPage_KeyUp(sender, e);
-        }
-
-        private void ProcessStopContentDialog_Closed(ContentDialog sender, ContentDialogClosedEventArgs args)
-        {
-            //mainPage.contentDialogIsActive = false;
-        }
-
-        private void ProcessStopContentDialog_Opened(ContentDialog sender, ContentDialogOpenedEventArgs args)
-        {
-            //mainPage.contentDialogIsActive = true;
         }
 
         private void completeButton_Click(object sender, RoutedEventArgs e)

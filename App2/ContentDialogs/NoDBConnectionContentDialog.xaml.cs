@@ -25,27 +25,7 @@ namespace TSSDataLogger.ContentDialogs
         {
             this.mainPage = mainPage;
 
-            this.Opened += NoDBConnectionContentDialog_Opened;
-            this.Closed += NoDBConnectionContentDialog_Closed;
-
-            this.KeyUp += NoDBConnectionContentDialog_KeyUp;
-
             this.InitializeComponent();
-        }
-
-        private void NoDBConnectionContentDialog_KeyUp(object sender, KeyRoutedEventArgs e)
-        {
-            mainPage.MainPage_KeyUp(sender, e);
-        }
-
-        private void NoDBConnectionContentDialog_Closed(ContentDialog sender, ContentDialogClosedEventArgs args)
-        {
-            //mainPage.contentDialogIsActive = false;
-        }
-
-        private void NoDBConnectionContentDialog_Opened(ContentDialog sender, ContentDialogOpenedEventArgs args)
-        {
-            //mainPage.contentDialogIsActive = true;
         }
 
         private void okButton_Click(object sender, RoutedEventArgs e)

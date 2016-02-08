@@ -41,8 +41,8 @@ namespace TSSDataLogger
             this.start = start;
             this.change = change;
             this.complete = complete;
-            this.product = "";
-            this.quantity = 0;
+            this.product = "??Pakning??";
+            this.quantity = 123;
         }
 
         public void load(string code, DateTime start, DateTime change, bool complete = false)
@@ -53,8 +53,8 @@ namespace TSSDataLogger
             this.start = start;
             this.change = change;
             this.complete = complete;
-            this.product = "";
-            this.quantity = 0;
+            this.product = "??Pakning??";
+            this.quantity = 123;
         }
 
         public void unload()

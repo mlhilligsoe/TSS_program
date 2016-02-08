@@ -82,6 +82,8 @@ namespace TSSDataLogger
             process = new Process();
             events = new ObservableCollection<Event>();
 
+            Window.Current.CoreWindow.KeyUp += CoreWindow_KeyUp;
+
             // Init App
             this.InitializeComponent();
             
@@ -99,8 +101,6 @@ namespace TSSDataLogger
 
             // Test if application has been configured
             testAppConfiguration();
-
-            Window.Current.CoreWindow.KeyUp += CoreWindow_KeyUp; ;
             
             // Configure and open USB/Arduino connection
             io = new IOConnector(this, machine);
@@ -144,32 +144,6 @@ namespace TSSDataLogger
                     command += e.VirtualKey.ToString().Replace("Number", "");
             }
 
-            setStatus(command);
-        }
-
-        internal void MainPage_KeyUp(object sender, KeyRoutedEventArgs e)
-        {
-            Debug.WriteLine("mainPage.MainPage_KeyUp");
-            setStatus("contentDialogIsActive: " + contentDialogIsActive);
-            if (!contentDialogIsActive)
-            {
-                if (e.Key == VirtualKey.Enter)
-                {
-                    if (command.Length > 0)
-                    {
-                        logic.parseCommand(command);
-                        command = "";
-                    }
-                }
-                else if (e.Key == VirtualKey.Back)
-                {
-                    if (command.Length > 0)
-                        command = command.Remove(command.Length - 1);
-                }
-            else
-                command += e.Key.ToString().Replace("Number", "");
-            }
-            
             setStatus(command);
         }
 

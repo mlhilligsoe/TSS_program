@@ -36,7 +36,7 @@
         <local:EventListTemplateSelector x:Key="EventListTemplateSelector" CompleteEventTemplate="{StaticResource CompleteEventTemplate}" OpenEventTemplate="{StaticResource OpenEventTemplate}" />
     </Page.Resources>
 
-    <Grid x:Name="rootGrid" Background="#555555" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" KeyUp="MainPage_KeyUp">
+    <Grid x:Name="rootGrid" Background="#555555" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
@@ -78,7 +78,7 @@
 
             <StackPanel Orientation="Vertical" Grid.Row="2">
                 <TextBlock Text="" Style="{StaticResource PropertyTextBlockStyle}"/>
-                <TextBlock x:Name="textBlockProcName" Text="Udstykning" Style="{StaticResource HeadingTextBlockStyle}"/>
+                <TextBlock x:Name="textBlockProcName" Text="Afstik" Style="{StaticResource HeadingTextBlockStyle}"/>
             </StackPanel>
 
             <!-- Property TextBlocks -->
@@ -122,7 +122,7 @@
                 <Ellipse x:Name="CircManual" Style="{StaticResource SignalIndicatorEllipseStyle}"/>
                 <TextBlock x:Name="LabelLatch" Text="KLAP" Style="{StaticResource SignalIndicatorTextBlockStyle}"/>
                 <Ellipse x:Name="CircLatch" Style="{StaticResource SignalIndicatorEllipseStyle}"/>
-                <TextBlock x:Name="LabelSplit" Text="UDSTYK" Style="{StaticResource SignalIndicatorTextBlockStyle}"/>
+                <TextBlock x:Name="LabelSplit" Text="AFSTIK" Style="{StaticResource SignalIndicatorTextBlockStyle}"/>
                 <Ellipse x:Name="CircSplit" Style="{StaticResource SignalIndicatorEllipseStyle}"/>
             </StackPanel>
         </StackPanel>
