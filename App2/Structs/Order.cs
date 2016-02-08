@@ -8,39 +8,59 @@ namespace TSSDataLogger
 {
     public class Order
     {
-        private MainPage mainPage;
         private bool active = false;
 
-        public int id;
-        public string code;
-        public string product;
-        public DateTime start;
-        public DateTime change;
-        public bool complete;
-        public int quantity;
-        public int n_processes;
+        // Object variables
+        public int id { get; set; }
+        public string code { get; set; }
+        public DateTime start { get; set; }
+        public DateTime change { get; set; }
+        public bool complete { get; set; }
+        public string product { get; set; }
+        public int quantity { get; set; }
 
-        public Order(MainPage mainPage)
+        // GUI representation
+        public string guiStart { get { return start.ToString("HH:mm dd/MM"); } }
+        public string guiChange { get { return change.ToString("HH:mm dd/MM"); } }
+
+        //DB Representation
+        public string dbCode { get { return code.ToString(); } }
+        public string dbStart { get { return start.ToString("yyyy-MM-dd H:mm:ss"); } }
+        public string dbChange { get { return change.ToString("yyyy-MM-dd H:mm:ss"); } }
+        public string dbComplete { get { return complete ? "1" : "0" ; } }
+
+        public Order()
         {
-            this.mainPage = mainPage;
         }
 
-        public void load(int id, string code, string product, DateTime start, DateTime change, int n_processes, bool complete = false, int quantity = 0)
+        public void load(int id, string code, DateTime start, DateTime change, bool complete = false)
         {
             active = true;
             this.id = id;
             this.code = code;
-            this.product = product;
             this.start = start;
             this.change = change;
             this.complete = complete;
-            this.quantity = quantity;
-            this.n_processes = n_processes;
+            this.product = "";
+            this.quantity = 0;
+        }
+
+        public void load(string code, DateTime start, DateTime change, bool complete = false)
+        {
+            active = true;
+            this.id = -1;
+            this.code = code;
+            this.start = start;
+            this.change = change;
+            this.complete = complete;
+            this.product = "";
+            this.quantity = 0;
         }
 
         public void unload()
         {
             active = false;
+            this.id = -1;
         }
 
         public bool isLoaded()

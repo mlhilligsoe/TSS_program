@@ -108,42 +108,38 @@ namespace TSSDataLogger.Connectors
         private void Usb_ConnectionLost(string message)
         {
             Debug.WriteLine("IOConnector.Usb_ConnectionLost\n" + message);
-            mainPage.setStatus("USB Connection Lost");
             arduinoAlive = false;
         }
 
         private void Usb_ConnectionFailed(string message)
         {
             Debug.WriteLine("IOConnector.Usb_ConnectionFailed\n" + message);
-            mainPage.setStatus("USB Connection Failed");
             arduinoAlive = false;
         }
 
         private void Usb_ConnectionEstablished()
         {
             Debug.WriteLine("IOConnector.Usb_ConnectionEstablished");
-            mainPage.setStatus("USB Connection Established");
+            mainPage.setStatus("I/O FORBINDELSE OPRETTET");
             arduinoAlive = true;
         }
 
         private void Arduino_DeviceConnectionLost(string message)
         {
             Debug.WriteLine("IOConnector.Arduino_DeviceConnectionLost\n" + message);
-            mainPage.setStatus("Microcontroller Connection Lost");
             arduinoAlive = false;
         }
 
         private void Arduino_DeviceConnectionFailed(string message)
         {
             Debug.WriteLine("IOConnector.Arduino_DeviceConnectionFailed\n" + message);
-            mainPage.setStatus("Microcontroller Connection Failed");
             arduinoAlive = false;
         }
 
         private void Arduino_DeviceReady()
         {
             Debug.WriteLine("IOConnector.Arduino_DeviceReady");
-            mainPage.setStatus("Microcontroller Connection Ready");
+            mainPage.setStatus("I/O FORBINDELSE OPRETTET");
 
             arduinoAlive = true;
 
@@ -164,12 +160,14 @@ namespace TSSDataLogger.Connectors
             
             if (!arduinoAlive && !arduinoRebooting)
             {
+                mainPage.setStatus("I/O FORBINDELSES FEJL - Tjek konfiguration eller tilkald support");
                 Debug.WriteLine("IOConnector.arduinoSignal_Tick-> Connection down. Trying to reboot connection.");
-                arduinoSignalTimer.Change(Timeout.Infinite, Timeout.Infinite);
 
+                arduinoSignalTimer.Change(Timeout.Infinite, Timeout.Infinite);
+                
                 arduinoRebooting = true;
                 usb.end();
-                await Task.Delay(2000);
+                //await Task.Delay(2000);
                 //usb.Dispose();
                 //Debug.WriteLine("arduinoSignal_Tick-> Wait 3 sec");
                 //Task.Delay(3000);

@@ -97,6 +97,7 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="ClassDiagram1.cd" />
     <None Include="project.json" />
     <None Include="TSS Data Logger_TemporaryKey.pfx" />
   </ItemGroup>
@@ -107,6 +108,15 @@
     <Compile Include="Common\BindableBase.cs" />
     <Compile Include="Common\DelegateCommand.cs" />
     <Compile Include="Connectors\IOConnector.cs" />
+    <Compile Include="ContentDialogs\LoadOrderContentDialog.xaml.cs">
+      <DependentUpon>LoadOrderContentDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ContentDialogs\NoIOConnectionContentDialog.xaml.cs">
+      <DependentUpon>NoIOConnectionContentDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ContentDialogs\NoDBConnectionContentDialog.xaml.cs">
+      <DependentUpon>NoDBConnectionContentDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ContentDialogs\ProcessStopContentDialog.xaml.cs">
       <DependentUpon>ProcessStopContentDialog.xaml</DependentUpon>
     </Compile>
@@ -149,6 +159,18 @@
     <Page Include="Config.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ContentDialogs\LoadOrderContentDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ContentDialogs\NoIOConnectionContentDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ContentDialogs\NoDBConnectionContentDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="ContentDialogs\ProcessStopContentDialog.xaml">
       <SubType>Designer</SubType>

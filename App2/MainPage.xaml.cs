@@ -63,10 +63,24 @@ namespace TSSDataLogger
 
         // Machine/Process logic
         public Logic logic;
-        
+
+        // Content dialogs
+        public ProcessStopContentDialog processStopContentDialog;
+        public LoadOrderContentDialog loadOrderContentDialog;
+        public NoDBConnectionContentDialog noDBConnectionContentDialog;
+        public NoIOConnectionContentDialog noIOConnectionContentDialog;
+        public bool contentDialogIsActive = false;
+
+        string command = "";
+
         public MainPage()
         {
             Debug.WriteLine("MainPage");
+
+            machine = new Machine(this);
+            order = new Order();
+            process = new Process();
+            events = new ObservableCollection<Event>();
 
             // Init App
             this.InitializeComponent();
@@ -86,12 +100,8 @@ namespace TSSDataLogger
             // Test if application has been configured
             testAppConfiguration();
 
-            // Init Machine
-            machine = new Machine(this);
-            order = new Order(this);
-            process = new Process(this);
-            events = new ObservableCollection<Event>();
-
+            Window.Current.CoreWindow.KeyUp += CoreWindow_KeyUp; ;
+            
             // Configure and open USB/Arduino connection
             io = new IOConnector(this, machine);
             
@@ -100,20 +110,69 @@ namespace TSSDataLogger
             
             logic = new Logic(this, sql, machine, order, process, events);
 
+            processStopContentDialog = new ProcessStopContentDialog(this, logic);
+            loadOrderContentDialog = new LoadOrderContentDialog(this);
+            noDBConnectionContentDialog = new NoDBConnectionContentDialog(this);
+            noIOConnectionContentDialog = new NoIOConnectionContentDialog(this);
+            
             updateGUI();
 
             // Uncomment if Debug is needed from startup
-            if(order != null)
-                Debug.WriteLine("MainPage.MainPage_Loaded->order.id: " + order.id);
-            else
-                Debug.WriteLine("MainPage.MainPage_Loaded->order: null");
-            logic.parseCommand("DEBUG");
-            if (order != null)
-                Debug.WriteLine("MainPage.MainPage_Loaded->order.id: " + order.id);
-            else
-                Debug.WriteLine("MainPage.MainPage_Loaded->order: null");
+            //logic.parseCommand("DEBUG");
         }
-        
+
+        private void CoreWindow_KeyUp(Windows.UI.Core.CoreWindow sender, Windows.UI.Core.KeyEventArgs e)
+        {
+            Debug.WriteLine("mainPage.MainPage_KeyUp");
+            setStatus("contentDialogIsActive: " + contentDialogIsActive);
+            if (!contentDialogIsActive)
+            {
+                if (e.VirtualKey == VirtualKey.Enter)
+                {
+                    if (command.Length > 0)
+                    {
+                        logic.parseCommand(command);
+                        command = "";
+                    }
+                }
+                else if (e.VirtualKey == VirtualKey.Back)
+                {
+                    if (command.Length > 0)
+                        command = command.Remove(command.Length - 1);
+                }
+                else
+                    command += e.VirtualKey.ToString().Replace("Number", "");
+            }
+
+            setStatus(command);
+        }
+
+        internal void MainPage_KeyUp(object sender, KeyRoutedEventArgs e)
+        {
+            Debug.WriteLine("mainPage.MainPage_KeyUp");
+            setStatus("contentDialogIsActive: " + contentDialogIsActive);
+            if (!contentDialogIsActive)
+            {
+                if (e.Key == VirtualKey.Enter)
+                {
+                    if (command.Length > 0)
+                    {
+                        logic.parseCommand(command);
+                        command = "";
+                    }
+                }
+                else if (e.Key == VirtualKey.Back)
+                {
+                    if (command.Length > 0)
+                        command = command.Remove(command.Length - 1);
+                }
+            else
+                command += e.Key.ToString().Replace("Number", "");
+            }
+            
+            setStatus(command);
+        }
+
         // Tests if application has been configured
         private void testAppConfiguration()
         {
@@ -145,16 +204,6 @@ namespace TSSDataLogger
             
         }
 
-        // Called on keyup from command textbox
-        private void textBoxCommand_KeyUp(object sender, KeyRoutedEventArgs e)
-        {
-            if (e.Key == VirtualKey.Enter)
-            {
-                logic.parseCommand(textBoxCommand.Text);
-                textBoxCommand.Text = "";
-            }
-        }
-
         // Updates GUI
         public void updateGUI()
         {
@@ -163,35 +212,18 @@ namespace TSSDataLogger
             Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
 
-                // Update machine state
-                if (io.isMicroControllerConnectionAlive())
-                {
-                    if (machine.getState(MachineStates.STARTUP))
-                        textBlockProcStatus.Text = "Opstart";
-                    else if (machine.getState(MachineStates.AUTO))
-                        textBlockProcStatus.Text = "Auto";
-                    else if (machine.getState(MachineStates.MANUAL))
-                        textBlockProcStatus.Text = "Manual";
-                    else
-                        textBlockProcStatus.Text = "-";
-                }
-                else
-                    textBlockProcStatus.Text = "-";
-
                 // Update Process
                 if (process.isLoaded())
                 {
                     textBlockProcQuantity.Text = process.quantity.ToString();
                     textBlockProcWaste.Text = process.waste.ToString();
                     textBlockProcStart.Text = process.start.ToString("H:mm dd/MM");
-                    textBlockProcComplete.Text = process.change.ToString("H:mm dd/MM");
                 }
                 else
                 {
                     textBlockProcQuantity.Text = "-";
                     textBlockProcWaste.Text = "-";
                     textBlockProcStart.Text = "-";
-                    textBlockProcComplete.Text = "-";
                 }
 
 
@@ -205,7 +237,7 @@ namespace TSSDataLogger
                 }
                 else
                 {
-                    textBlockOrderCode.Text = "-";
+                    textBlockOrderCode.Text = "SKAN ORDRE";
                     textBlockOrderProduct.Text = "-";
                     textBlockOrderQuantity.Text = "-";
                     textBlockOrderStart.Text = "-";
@@ -219,9 +251,6 @@ namespace TSSDataLogger
                 CircManual.Fill = machine.getState(MachineStates.MANUAL) ? on : off;
                 CircLatch.Fill = machine.getState(MachineStates.LATCH) ? on : off;
                 CircSplit.Fill = machine.getState(MachineStates.SPLIT) ? on : off;
-
-                // Set focus on input command bar
-                textBoxCommand.Focus(FocusState.Keyboard);
             });
         }
 
@@ -231,6 +260,8 @@ namespace TSSDataLogger
         // Called when toggle switches are toggled
         private void toggleSwitch_Toggled(object sender, RoutedEventArgs e)
         {
+            Debug.WriteLine("mainPage.toggleSwitch_Toggled");
+
             ToggleSwitch toggleSwitch = sender as ToggleSwitch;
 
             switch (toggleSwitch.Name.ToLower())
@@ -252,27 +283,25 @@ namespace TSSDataLogger
                     break;
 
             }
-
+            
         }
         
         /* Write status to tectBlockStatus */
         public void setStatus(String msg) { Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { textBlockStatus.Text = msg; }); }
         public void appendStatus(String msg) { Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { textBlockStatus.Text += msg; }); }
-        //public void setStatus(String msg) { textBlockStatus.Text = msg; }
-        //public void appendStatus(String msg) { textBlockStatus.Text += msg; }
+        
+        public void showProcessStopContentDialog() { if (!contentDialogIsActive) { Debug.WriteLine("MainPage.showProcessStopContenDialog"); contentDialogIsActive = true; Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { processStopContentDialog.ShowAsync(); }); }; }
+        public void hideProcessStopContentDialog() { Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { processStopContentDialog.Hide(); }); contentDialogIsActive = false; }
 
-        public ProcessStopResult processStopContenDialog()
-        {
-            ProcessStopContentDialog processStopContentDialog;
+        public void showLoadOrderContentDialog() { if (!contentDialogIsActive) { Debug.WriteLine("MainPage.showLoadOrderContenDialog"); contentDialogIsActive = true; Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { loadOrderContentDialog.ShowAsync(); }); }; }
+        public void hideLoadOrderContentDialog() { Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { loadOrderContentDialog.Hide(); }); contentDialogIsActive = false; }
 
-            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
-            {
-                processStopContentDialog = new ProcessStopContentDialog();
-                await processStopContentDialog.ShowAsync();
-            });
+        public void showNoIOConnectionContentDialog() { if (!contentDialogIsActive) { Debug.WriteLine("MainPage.showNoIOConnectionContenDialog"); contentDialogIsActive = true; Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { noIOConnectionContentDialog.ShowAsync(); }); }; }
+        public void hideNoIOConnectionContentDialog() { Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { noIOConnectionContentDialog.Hide(); }); contentDialogIsActive = false; }
 
-            return processStopContentDialog.Result;
-        }
+        public void showNoDBConnectionContentDialog() { if (!contentDialogIsActive) { Debug.WriteLine("MainPage.showNoDBConnectionContenDialog"); contentDialogIsActive = true; Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { noDBConnectionContentDialog.ShowAsync(); }); }; }
+        public void hideNoDBConnectionContentDialog() { Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { noDBConnectionContentDialog.Hide(); }); contentDialogIsActive = false; }
+
     }
 }
 

@@ -10,113 +10,123 @@
 
     <!-- Event ListView Ressources -->
     <Page.Resources>
-        
+
         <DataTemplate x:Key="OpenEventTemplate" x:DataType="data:Event">
             <Grid Background="#19FFFFFF">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="100" />
                     <ColumnDefinition Width="1*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="{x:Bind code}" Style="{ThemeResource BaseTextBlockStyle}" Foreground="White" FontWeight="Bold" FontSize="28" />
-                <TextBlock Grid.Column="1" Text="{x:Bind description}" Style="{ThemeResource BaseTextBlockStyle}" Foreground="White" FontWeight="Bold" FontSize="28" />
-                <TextBlock Grid.Column="2" Text="{x:Bind startFormat}" Style="{ThemeResource BaseTextBlockStyle}" Foreground="White" FontWeight="Bold" FontSize="28"/>
+                <TextBlock Grid.Column="0" Text="{x:Bind code}" Style="{ThemeResource BaseTextBlockStyle}" Foreground="PaleGreen" FontWeight="Bold" FontSize="42" />
+                <TextBlock Grid.Column="1" Text="{x:Bind guiStart}" Style="{ThemeResource BaseTextBlockStyle}" Foreground="PaleGreen" FontWeight="Bold" FontSize="42"/>
             </Grid>
         </DataTemplate>
 
         <DataTemplate x:Key="CompleteEventTemplate" x:DataType="data:Event">
-            <Grid Background="Black">
+            <Grid Background="#19FFFFFF">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="100" />
                     <ColumnDefinition Width="1*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="{x:Bind code}" Style="{ThemeResource BaseTextBlockStyle}" Foreground="White" FontWeight="Bold" FontSize="28" />
-                <TextBlock Grid.Column="1" Text="{x:Bind description}" Style="{ThemeResource BaseTextBlockStyle}" Foreground="White" FontWeight="Bold" FontSize="28" />
-                <TextBlock Grid.Column="2" Text="{x:Bind startFormat}" Style="{ThemeResource BaseTextBlockStyle}" Foreground="White" FontWeight="Bold" FontSize="28"/>
+                <TextBlock Grid.Column="0" Text="{x:Bind code}" Style="{ThemeResource BaseTextBlockStyle}" Foreground="white" FontWeight="Bold" FontSize="42" />
+                <TextBlock Grid.Column="1" Text="{x:Bind guiStart}" Style="{ThemeResource BaseTextBlockStyle}" Foreground="white" FontWeight="Bold" FontSize="42"/>
             </Grid>
         </DataTemplate>
 
         <local:EventListTemplateSelector x:Key="EventListTemplateSelector" CompleteEventTemplate="{StaticResource CompleteEventTemplate}" OpenEventTemplate="{StaticResource OpenEventTemplate}" />
     </Page.Resources>
-    
-    <Grid x:Name="rootGrid" Background="#555555" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+
+    <Grid x:Name="rootGrid" Background="#555555" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" KeyUp="MainPage_KeyUp">
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="45*"/>
-            <ColumnDefinition Width="55*"/>
+            <ColumnDefinition Width="50*"/>
+            <ColumnDefinition Width="50*"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
 
         <!-- Order and Process pane -->
         <Grid Grid.Row="0" Grid.Column="0" Background="#FF075959" Padding="30,10,20,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="1*"/>
-            </Grid.ColumnDefinitions>
-            
-            <!-- Property TextBlocks -->
-            <StackPanel Orientation="Vertical" Grid.Column="0">
-                <TextBlock Text="Ordre Nr:" Style="{StaticResource PropertyTextBlockStyle}"/>
-                <TextBlock Text="Produkt:" Style="{StaticResource PropertyTextBlockStyle}"/>
-                <TextBlock Text="Styktal:" Style="{StaticResource PropertyTextBlockStyle}"/>
-                <TextBlock Text="Started:" Style="{StaticResource PropertyTextBlockStyle}"/>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Orientation="Vertical" Grid.Row="0">
                 <TextBlock Text="" Style="{StaticResource PropertyTextBlockStyle}"/>
-                <TextBlock Text="Status:"   Style="{StaticResource PropertyTextBlockStyle}"/>
-                <TextBlock Text="Prod.:"   Style="{StaticResource PropertyTextBlockStyle}"/>
-                <TextBlock Text="Spild:"   Style="{StaticResource PropertyTextBlockStyle}"/>
-                <TextBlock Text="Started:"   Style="{StaticResource PropertyTextBlockStyle}"/>
-                <TextBlock Text="Færdig:"   Style="{StaticResource PropertyTextBlockStyle}"/>
+                <TextBlock x:Name="textBlockOrderCode" Text="-" Style="{StaticResource HeadingTextBlockStyle}"/>
+            </StackPanel>
+
+            <!-- Property TextBlocks -->
+            <StackPanel Orientation="Vertical" Grid.Row="1">
+                <!--<TextBlock Text="Ordre Nr:" Style="{StaticResource PropertyTextBlockStyle}"/>-->
+                <TextBlock Text="Produkt" Style="{StaticResource PropertyTextBlockStyle}"/>
+                <TextBlock Text="Styktal" Style="{StaticResource PropertyTextBlockStyle}"/>
+                <TextBlock Text="Start" Style="{StaticResource PropertyTextBlockStyle}"/>
             </StackPanel>
 
             <!-- Value TextBlocks -->
-            <StackPanel Orientation="Vertical" Grid.Column="1">
-                <TextBlock x:Name="textBlockOrderCode" Text="-" Style="{StaticResource ValueTextBlockStyle}"/>
+            <StackPanel Orientation="Vertical" Grid.Row="1">
                 <TextBlock x:Name="textBlockOrderProduct" Text="-" Style="{StaticResource ValueTextBlockStyle}"/>
                 <TextBlock x:Name="textBlockOrderQuantity" Text="-" Style="{StaticResource ValueTextBlockStyle}"/>
                 <TextBlock x:Name="textBlockOrderStart" Text="-" Style="{StaticResource ValueTextBlockStyle}"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Vertical" Grid.Row="2">
                 <TextBlock Text="" Style="{StaticResource PropertyTextBlockStyle}"/>
-                <TextBlock x:Name="textBlockProcStatus"  Text="-"   Style="{StaticResource ValueTextBlockStyle}"/>
+                <TextBlock x:Name="textBlockProcName" Text="Udstykning" Style="{StaticResource HeadingTextBlockStyle}"/>
+            </StackPanel>
+
+            <!-- Property TextBlocks -->
+            <StackPanel Orientation="Vertical" Grid.Row="3">
+                <TextBlock Text="Produktion"   Style="{StaticResource PropertyTextBlockStyle}"/>
+                <TextBlock Text="Spild"   Style="{StaticResource PropertyTextBlockStyle}"/>
+                <TextBlock Text="Start"   Style="{StaticResource PropertyTextBlockStyle}"/>
+            </StackPanel>
+
+            <!-- Value TextBlocks -->
+            <StackPanel Orientation="Vertical" Grid.Row="3">
                 <TextBlock x:Name="textBlockProcQuantity"  Text="-"  Style="{StaticResource ValueTextBlockStyle}"/>
                 <TextBlock x:Name="textBlockProcWaste"  Text="-"   Style="{StaticResource ValueTextBlockStyle}"/>
                 <TextBlock x:Name="textBlockProcStart"  Text="-"   Style="{StaticResource ValueTextBlockStyle}"/>
-                <TextBlock x:Name="textBlockProcComplete"  Text="-"   Style="{StaticResource ValueTextBlockStyle}"/>
             </StackPanel>
         </Grid>
 
         <!-- Event Listview -->
         <ListView Grid.Column="1" x:Name="EventListView" Grid.Row="0" Background="#FF0B8080" ItemsSource="{x:Bind events}" ItemTemplateSelector="{StaticResource EventListTemplateSelector}" ItemContainerStyle="{StaticResource EventListViewItemStyle}"/>
-        
-        <!-- Command pane -->
-        <TextBox x:Name="textBoxCommand" Grid.Row="1" TextWrapping="Wrap" Width="480" Margin="0,10,10,10" Foreground="White" FontSize="18" FontWeight="Bold" KeyUp="textBoxCommand_KeyUp" Height="36" VerticalAlignment="Bottom" HorizontalAlignment="Right" Grid.ColumnSpan="3"/>
-        <TextBlock x:Name="textBlockStatus" Grid.Row="1" TextWrapping="Wrap" Text="Status:" Width="480" Margin="10,10,0,10" Foreground="White" FontSize="18" Grid.ColumnSpan="2" Height="36" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
 
-        <!-- ToogleSwitches -->
-        <StackPanel x:Name="toggleSwitches" Visibility="Collapsed" Orientation="Vertical"  Grid.Row="0" Grid.Column="2" HorizontalAlignment="Left" Background="#FF18A48B" Padding="5,0,60,0">
-            <ToggleSwitch x:Name="startup" Header="Opstart" Toggled="toggleSwitch_Toggled" Style="{StaticResource SignalToggleSwitchStyle}"/>
-            <ToggleSwitch x:Name="auto" Header="Auto" Toggled="toggleSwitch_Toggled" Style="{StaticResource SignalToggleSwitchStyle}"/>
-            <ToggleSwitch x:Name="manual" Header="Manual" Toggled="toggleSwitch_Toggled" Style="{StaticResource SignalToggleSwitchStyle}"/>
-            <ToggleSwitch x:Name="latch" Header="Klap" Toggled="toggleSwitch_Toggled" Style="{StaticResource SignalToggleSwitchStyle}"/>
-            <ToggleSwitch x:Name="split" Header="Afstik" Toggled="toggleSwitch_Toggled" Style="{StaticResource SignalToggleSwitchStyle}"/>
+        <!-- Status pane -->
+        <TextBlock x:Name="textBlockStatus" Grid.Row="1" TextWrapping="Wrap" Text="Status:" Width="auto" Margin="10,0,0,10" Foreground="White" FontSize="32" Grid.ColumnSpan="3" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
+
+        <StackPanel Orientation="Horizontal"  Grid.Row="0" Grid.Column="2" Background="#FF18A48B" Padding="10,20">
+            <!-- ToogleSwitches -->
+            <StackPanel x:Name="toggleSwitches" Visibility="Collapsed" HorizontalAlignment="Left">
+                <ToggleSwitch x:Name="startup" Header="Opstart" Toggled="toggleSwitch_Toggled" Style="{StaticResource SignalToggleSwitchStyle}"/>
+                <ToggleSwitch x:Name="auto" Header="Auto" Toggled="toggleSwitch_Toggled" Style="{StaticResource SignalToggleSwitchStyle}"/>
+                <ToggleSwitch x:Name="manual" Header="Manual" Toggled="toggleSwitch_Toggled" Style="{StaticResource SignalToggleSwitchStyle}"/>
+                <ToggleSwitch x:Name="latch" Header="Klap" Toggled="toggleSwitch_Toggled" Style="{StaticResource SignalToggleSwitchStyle}"/>
+                <ToggleSwitch x:Name="split" Header="Afstik" Toggled="toggleSwitch_Toggled" Style="{StaticResource SignalToggleSwitchStyle}"/>
+            </StackPanel>
+
+            <!-- Input signal indicators -->
+            <StackPanel Orientation="Vertical" Visibility="Visible"  HorizontalAlignment="Right">
+                <TextBlock x:Name="LabelStartUp" Text="OPSTART" Style="{StaticResource SignalIndicatorTextBlockStyle}"/>
+                <Ellipse x:Name="CircStartup" Style="{StaticResource SignalIndicatorEllipseStyle}"/>
+                <TextBlock x:Name="LabelAuto" Text="AUTO" Style="{StaticResource SignalIndicatorTextBlockStyle}"/>
+                <Ellipse x:Name="CircAuto" Style="{StaticResource SignalIndicatorEllipseStyle}"/>
+                <TextBlock x:Name="LabelManual" Text="MANUAL" Style="{StaticResource SignalIndicatorTextBlockStyle}"/>
+                <Ellipse x:Name="CircManual" Style="{StaticResource SignalIndicatorEllipseStyle}"/>
+                <TextBlock x:Name="LabelLatch" Text="KLAP" Style="{StaticResource SignalIndicatorTextBlockStyle}"/>
+                <Ellipse x:Name="CircLatch" Style="{StaticResource SignalIndicatorEllipseStyle}"/>
+                <TextBlock x:Name="LabelSplit" Text="UDSTYK" Style="{StaticResource SignalIndicatorTextBlockStyle}"/>
+                <Ellipse x:Name="CircSplit" Style="{StaticResource SignalIndicatorEllipseStyle}"/>
+            </StackPanel>
         </StackPanel>
         
-        <!-- Input signal indicators -->
-        <StackPanel Orientation="Vertical"  Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right" Background="#FF18A48B" Padding="10,0,10,10">
-            <TextBlock x:Name="LabelStartUp" Text="Startup" Style="{StaticResource SignalIndicatorTextBlockStyle}"/>
-            <Ellipse x:Name="CircStartup" Style="{StaticResource SignalIndicatorEllipseStyle}"/>
-            <TextBlock x:Name="LabelAuto" Text="Auto" Style="{StaticResource SignalIndicatorTextBlockStyle}"/>
-            <Ellipse x:Name="CircAuto" Style="{StaticResource SignalIndicatorEllipseStyle}"/>
-            <TextBlock x:Name="LabelManual" Text="Manual" Style="{StaticResource SignalIndicatorTextBlockStyle}"/>
-            <Ellipse x:Name="CircManual" Style="{StaticResource SignalIndicatorEllipseStyle}"/>
-            <TextBlock x:Name="LabelLatch" Text="Latch" Style="{StaticResource SignalIndicatorTextBlockStyle}"/>
-            <Ellipse x:Name="CircLatch" Style="{StaticResource SignalIndicatorEllipseStyle}"/>
-            <TextBlock x:Name="LabelSplit" Text="Split" Style="{StaticResource SignalIndicatorTextBlockStyle}"/>
-            <Ellipse x:Name="CircSplit" Style="{StaticResource SignalIndicatorEllipseStyle}"/>
-        </StackPanel>
-
     </Grid>
 </Page>
 

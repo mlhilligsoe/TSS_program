@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Text;
 using Windows.UI.Xaml.Controls;
 using System.Diagnostics;
+using System;
 
 namespace TSSDataLogger
 {
@@ -60,7 +61,7 @@ namespace TSSDataLogger
             catch (MySqlException ex)
             {
                 Debug.WriteLine("Could not connect to DB. \nConnection state: " + conn.State + " \nException: " + ex.Message);
-                mainPage.setStatus("Could not connect to DB. Please check configuration.");
+                mainPage.setStatus("FEJL I DATABASE FORBINDELSE - Tjek konfiguration eller tilkald support");
                 return false;
             }
             finally
@@ -73,254 +74,203 @@ namespace TSSDataLogger
         }
 
         /* Create objects */
-        public int createOrder()
+        public void createOrder()
         {
             Debug.WriteLine("MySqlConnector.createOrder");
-
-            MySqlDataReader rdr = null;
-            int r;
-
+            
             try
             {
                 conn.Open();
-                //status.Text += order.start.ToString();
-                string stm = string.Format("INSERT INTO `bosch`.`orders` "
-                                            + "(`order_code`, `order_product`, `order_quantity`, "
-                                            + "`order_start`, `order_change`, `order_complete`, `order_n_processes`) "
-                                            + "VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}'); "
-                                            + "SELECT last_insert_id()",
-                                            order.code, order.product, order.quantity,
-                                            order.start.ToString("yyyy-MM-dd H:mm:ss"), order.change.ToString("yyyy-MM-dd H:mm:ss"), order.complete ? 1 : 0, 0);
 
-                MySqlCommand cmd = new MySqlCommand(stm, conn);
-                rdr = cmd.ExecuteReader();
+                if(conn.State == ConnectionState.Open){
+                    string stm = string.Format("INSERT INTO `bosch`.`orders` "
+                                            + "(`order_code`, `order_start`, `order_change`) "
+                                            + "VALUES ('{0}', '{1}', '{2}')",
+                                            order.dbCode, order.dbStart, order.dbChange);
+                    Debug.WriteLine("stm: " + stm);
 
-                if (rdr.Read())
-                    r = rdr.GetInt32("last_insert_id()");
+                    MySqlCommand cmd = new MySqlCommand(stm, conn);
+                    cmd.ExecuteNonQuery();
+                    order.id = (int)cmd.LastInsertedId;
+                }
                 else
-                    r = -1;
-
-
+                {
+                    mainPage.setStatus("FEJL I DATABASE FORBINDELSE - Tjek konfiguration eller tilkald support");
+                    Debug.WriteLine("Could not connect to DB. \nConnection state: " + conn.State);
+                }
             }
             catch (MySqlException ex)
             {
-                Debug.WriteLine("Could not create insert order into DB. \nConnection status: " + conn.State + " \nException: " + ex.Message);
-                mainPage.setStatus("Could not create insert order into DB.");
-                return -1;
+                Debug.WriteLine("Could not create in DB. \nConnection status: " + conn.State + " \nException: " + ex.Message);
+                mainPage.setStatus("FEJL I DATABASE FORBINDELSE - Tjek konfiguration eller tilkald support");
             }
             finally
             {
-                if (rdr != null)
-                    rdr.Close();
-
                 if (conn != null)
                     conn.Close();
             }
-
-            return r;
         }
 
-        public int createProcess()
+        public void createProcess()
         {
             Debug.WriteLine("MySqlConnector.createProcess");
 
-            MySqlDataReader rdr = null;
-            int r;
-
             try
             {
                 conn.Open();
 
-                string stm = string.Format("INSERT INTO `bosch`.`processes` "
-                                            + "(`process_order_id`, `process_code`, `process_start`, `process_change`) "
-                                            + "VALUES ('{0}', '{1}', '{2}', '{3}'); "
-                                            + "SELECT last_insert_id()",
-                                            order.id, process.code, process.start, process.change);
+                if (conn.State == ConnectionState.Open)
+                {
+                    string stm = string.Format("INSERT INTO `bosch`.`processes` "
+                                            + "(`process_order_id`, `process_code`, `process_start`, `process_change`, `process_complete`, `process_quantity`, `process_waste`) "
+                                            + "VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}'); ",
+                                            order.id, process.dbCode, process.dbStart, process.dbChange, process.dbComplete, process.quantity, process.waste);
+                    Debug.WriteLine("stm: " + stm);
 
-                MySqlCommand cmd = new MySqlCommand(stm, conn);
-                rdr = cmd.ExecuteReader();
-
-                if (rdr.Read())
-                    r = rdr.GetInt32("last_insert_id()");
+                    MySqlCommand cmd = new MySqlCommand(stm, conn);
+                    cmd.ExecuteNonQuery();
+                    process.id = (int)cmd.LastInsertedId;
+                }
                 else
-                    r = -1;
-
-
+                {
+                    mainPage.setStatus("FEJL I DATABASE FORBINDELSE - Tjek konfiguration eller tilkald support");
+                    Debug.WriteLine("Could not connect to DB. \nConnection state: " + conn.State);
+                }
             }
             catch (MySqlException ex)
             {
-                Debug.WriteLine("Could not insert process into DB. \nConnection status: " + conn.State + " \nException: " + ex.Message);
-                mainPage.setStatus("Could not insert process into DB.");
-                return -1;
+                Debug.WriteLine("Could not create process in DB. \nConnection status: " + conn.State + " \nException: " + ex.Message);
+                mainPage.setStatus("FEJL I DATABASE FORBINDELSE - Tjek konfiguration eller tilkald support");
             }
             finally
             {
-                if (rdr != null)
-                    rdr.Close();
-
                 if (conn != null)
                     conn.Close();
             }
-
-            return r;
         }
 
-        public int createEvent(string event_code, string event_description)
+        public void createEvent(Event evt)
         {
             Debug.WriteLine("MySqlConnector.createEvent");
 
-            MySqlDataReader rdr = null;
-            int r;
+            try
+            {
+                conn.Open();
+
+                if (conn.State == ConnectionState.Open)
+                {
+                    string stm = string.Format("INSERT INTO `bosch`.`events` "
+                                            + "(`event_process_id`, `event_code`, `event_start`, `event_change`, `event_complete`) "
+                                            + "VALUES('{0}', '{1}', '{2}', '{3}', '{4}')",
+                                            process.id, evt.dbCode, evt.dbStart, evt.dbChange, evt.dbComplete);
+                    Debug.WriteLine("stm: " + stm);
+
+                    MySqlCommand cmd = new MySqlCommand(stm, conn);
+                    cmd.ExecuteNonQuery();
+                    evt.id = (int)cmd.LastInsertedId;
+                }
+                else
+                {
+                    mainPage.setStatus("FEJL I DATABASE FORBINDELSE - Tjek konfiguration eller tilkald support");
+                    Debug.WriteLine("Could not connect to DB. \nConnection state: " + conn.State);
+                }
+            }
+            catch (MySqlException ex)
+            {
+                Debug.WriteLine("Could not create event in DB. \nConnection status: " + conn.State + " \nException: " + ex.Message);
+                mainPage.setStatus("FEJL I DATABASE FORBINDELSE - Tjek konfiguration eller tilkald support");
+            }
+            finally
+            {
+                if (conn != null)
+                    conn.Close();
+            }
+        }
+
+        /* Update objects */
+        public void updateOrder()
+        {
+            Debug.WriteLine("MySqlConnector.updateOrder");
 
             try
             {
                 conn.Open();
 
-                string stm = string.Format("INSERT INTO `bosch`.`events` "
-                                            + "(`event_process_id`, `event_code`, `event_description`) "
-                                            + "VALUES ('{0}', '{1}', '{2}'); "
-                                            + "SELECT last_insert_id()",
-                                            process.id, event_code, event_description);
-
-                MySqlCommand cmd = new MySqlCommand(stm, conn);
-                rdr = cmd.ExecuteReader();
-
-                if (rdr.Read())
+                if (conn.State == ConnectionState.Open)
                 {
-                    r = rdr.GetInt32("last_insert_id()");
-                    process.n_events++;
-                    rdr.Close();
+                    string stm = string.Format("UPDATE `bosch`.`orders` "
+                                            + "SET `order_change` = '{0}', `order_complete` = '{1}' "
+                                            + "WHERE `orders`.`order_id` = '{2}';",
+                                            order.dbChange, order.dbComplete, order.id);
+                    Debug.WriteLine("stm: " + stm);
 
-                    stm = string.Format("UPDATE `bosch`.`processes` "
-                                        + "SET `process_n_events` = '{0}' "
-                                        + "WHERE `processes`.`process_id` = {1};",
-                                        process.n_events, process.id);
-                    cmd = new MySqlCommand(stm, conn);
-                    cmd.ExecuteReader();
+                    MySqlCommand cmd = new MySqlCommand(stm, conn);
+                    cmd.ExecuteNonQuery();
                 }
-
                 else
-                    r = -1;
-
-
+                {
+                    mainPage.setStatus("FEJL I DATABASE FORBINDELSE - Tjek konfiguration eller tilkald support");
+                    Debug.WriteLine("Could not connect to DB. \nConnection state: " + conn.State);
+                }
             }
             catch (MySqlException ex)
             {
-                Debug.WriteLine("Could not insert event into DB. \nConnection status: " + conn.State + " \nException: " + ex.Message);
-                mainPage.setStatus("Could not insert event into DB.");
-                return -1;
+                Debug.WriteLine("Could not update order in DB. \nConnection status: " + conn.State + " \nException: " + ex.Message);
+                mainPage.setStatus("FEJL I DATABASE FORBINDELSE - Tjek konfiguration eller tilkald support");
             }
             finally
             {
-                if (rdr != null)
-                    rdr.Close();
-
                 if (conn != null)
                     conn.Close();
             }
-
-            return r;
         }
 
-        /* Update objects */
-        public bool updateOrder()
-        {
-            Debug.WriteLine("MySqlConnector.updateOrder");
-
-            if (order != null)
-            {
-
-                try
-                {
-                    conn.Open();
-
-                    string stm = string.Format("UPDATE `bosch`.`orders` "
-                                             + "SET `order_change` = '{0}', `order_complete` = '{1}', `order_n_processes` = '{2}'"
-                                             + "WHERE `orders`.`order_id` = {3};",
-                                                order.change, order.complete ? 1 : 0, order.n_processes, order.id);
-
-                    MySqlCommand cmd = new MySqlCommand(stm, conn);
-                    cmd.ExecuteReader();
-
-                }
-                catch (MySqlException ex)
-                {
-                    Debug.WriteLine("Could not update order in DB. \nConnection status: " + conn.State + " \nException: " + ex.Message);
-                    mainPage.setStatus("Could not update order in DB.");
-                    return false;
-                }
-                finally
-                {
-                    if (conn != null)
-                        conn.Close();
-                }
-
-                return true;
-
-            }
-            else {
-                return false;
-            }
-        }
-
-        public bool updateProcess()
+        public void updateProcess()
         {
             Debug.WriteLine("MySqlConnector.updateProcess");
-
-            if (process != null)
+        
+            try
             {
+                conn.Open();
 
-                try
+                if (conn.State == ConnectionState.Open)
                 {
-                    conn.Open();
-
                     string stm = string.Format("UPDATE `bosch`.`processes` "
-                                            + "SET `process_code` = '{0}', `process_quantity` = '{1}', `process_waste` = '{2}', "
-                                            + "`process_change` = '{3}', `process_complete` = '{4}', `process_n_events` = '{5}'"
-                                            + "WHERE `processes`.`process_id` = {6};",
-                                               process.code, process.quantity, process.waste, process.change, process.complete ? 1 : 0, process.n_events, process.id);
+                                        + "SET `process_change` = '{0}', `process_complete` = '{1}', `process_quantity` = '{2}', `process_waste` = '{3}' "
+                                        + "WHERE `processes`.`process_id` = '{4}';",
+                                            process.dbChange, process.dbComplete, process.quantity, process.waste, process.id);
+                    Debug.WriteLine("stm: " + stm);
 
                     MySqlCommand cmd = new MySqlCommand(stm, conn);
-                    cmd.ExecuteReader();
-
-
+                    cmd.ExecuteNonQuery();
                 }
-                catch (MySqlException ex)
+                else
                 {
-                    Debug.WriteLine("Could not update process in DB. \nConnection status: " + conn.State + " \nException: " + ex.Message);
-                    mainPage.setStatus("Could not update process in DB.");
-                    return false;
+                    mainPage.setStatus("FEJL I DATABASE FORBINDELSE - Tjek konfiguration eller tilkald support");
+                    Debug.WriteLine("Could not connect to DB. \nConnection state: " + conn.State);
                 }
-                finally
-                {
-                    if (conn != null)
-                        conn.Close();
-                }
-
-                return true;
-
             }
-            else
+            catch (MySqlException ex)
             {
-                return false;
+                Debug.WriteLine("Could not update process in DB. \nConnection status: " + conn.State + " \nException: " + ex.Message);
+                mainPage.setStatus("FEJL I DATABASE FORBINDELSE - Tjek konfiguration eller tilkald support");
+            }
+            finally
+            {
+                if (conn != null)
+                    conn.Close();
             }
         }
         
-        public bool updateEvents()
+        public void updateEvents()
         {
             Debug.WriteLine("MySqlConnector.updateEvents");
 
-            bool failures = false;
-
-            for (int i = 0; i < events.Count; i++)
-            {
-                failures = updateEvent(events[i]);
-            }
-
-            return failures;
+            foreach (Event evt in events)
+                updateEvent(evt);
         }
 
-        public bool updateEvent(Event evt)
+        public void updateEvent(Event evt)
         {
             Debug.WriteLine("MySqlConnector.updateEvent");
 
@@ -328,34 +278,37 @@ namespace TSSDataLogger
             {
                 conn.Open();
 
-                string stm = string.Format("UPDATE `bosch`.`events` "
-                                         + "SET `event_code` = '{0}', `event_description` = '{1}', "
-                                         + "`event_change` = '{2}', `event_complete` = '{3}'"
-                                         + "WHERE `events`.`event_id` = {4};",
-                                            evt.code, evt.description, evt.change, evt.complete ? 1 : 0, evt.id);
+                if (conn.State == ConnectionState.Open)
+                {
+                    string stm = string.Format("UPDATE `bosch`.`events` "
+                                         + "SET `event_change` = '{0}', `event_complete` = '{1}' "
+                                         + "WHERE `events`.`event_id` = '{2}';",
+                                            evt.dbChange, evt.dbComplete, evt.id);
+                    Debug.WriteLine("stm: " + stm);
 
-                MySqlCommand cmd = new MySqlCommand(stm, conn);
-                cmd.ExecuteReader();
-
-
+                    MySqlCommand cmd = new MySqlCommand(stm, conn);
+                    cmd.ExecuteNonQuery();
+                }
+                else
+                {
+                    mainPage.setStatus("FEJL I DATABASE FORBINDELSE - Tjek konfiguration eller tilkald support");
+                    Debug.WriteLine("Could not connect to DB. \nConnection state: " + conn.State);
+                }
             }
             catch (MySqlException ex)
             {
                 Debug.WriteLine("Could not update event in DB. \nConnection status: " + conn.State + " \nException: " + ex.Message);
-                mainPage.setStatus("Could not update event in DB.");
-                return false;
+                mainPage.setStatus("FEJL I DATABASE FORBINDELSE - Tjek konfiguration eller tilkald support");
             }
             finally
             {
                 if (conn != null)
                     conn.Close();
             }
-
-            return true;
         }
         
         /* Load objects */
-        public bool loadOrder(int id)
+        public void loadOrder(int orderId)
         {
             Debug.WriteLine("MySqlConnector.loadOrder");
 
@@ -365,27 +318,33 @@ namespace TSSDataLogger
             {
                 conn.Open();
 
-                string stm = "SELECT * FROM `orders` WHERE `order_id` = " + id.ToString() + " ORDER BY `order_id` DESC LIMIT 1";
-                MySqlCommand cmd = new MySqlCommand(stm, conn);
-                rdr = cmd.ExecuteReader();
-
-                if (rdr.Read())
+                if (conn.State == ConnectionState.Open)
                 {
-                    order.load(rdr.GetInt32("order_id"),
-                                        rdr.GetString("order_code"),
-                                        rdr.GetString("order_product"),
-                                        rdr.GetDateTime("order_start"),
-                                        rdr.GetDateTime("order_change"),
-                                        rdr.GetInt32("order_n_processes"),
-                                        rdr.GetBoolean("order_complete"),
-                                        rdr.GetInt32("order_quantity"));
+                    string stm = String.Format("SELECT * FROM `orders` WHERE `order_id` = '{0}' LIMIT 1", orderId);
+                    Debug.WriteLine("stm: " + stm);
+
+                    MySqlCommand cmd = new MySqlCommand(stm, conn);
+                    rdr = cmd.ExecuteReader();
+
+                    if (rdr.Read())
+                    {
+                        order.load(rdr.GetInt32("order_id"),
+                                    rdr.GetString("order_code"),
+                                    rdr.GetDateTime("order_start"),
+                                    rdr.GetDateTime("order_change"),
+                                    rdr.GetBoolean("order_complete"));
+                    }
+                }
+                else
+                {
+                    mainPage.setStatus("FEJL I DATABASE FORBINDELSE - Tjek konfiguration eller tilkald support");
+                    Debug.WriteLine("Could not connect to DB. \nConnection state: " + conn.State);
                 }
             }
             catch (MySqlException ex)
             {
                 Debug.WriteLine("Could not load order from DB. \nConnection status: " + conn.State + " \nException: " + ex.Message);
-                mainPage.setStatus("Could not load order from DB.");
-                return false;
+                mainPage.setStatus("FEJL I DATABASE FORBINDELSE - Tjek konfiguration eller tilkald support");
             }
             finally
             {
@@ -394,13 +353,10 @@ namespace TSSDataLogger
                 
                 if (conn != null)
                     conn.Close();
-                
             }
-
-            return true;
         }
 
-        public bool loadOrder(string code)
+        public bool loadOrder(string orderCode)
         {
             Debug.WriteLine("MySqlConnector.loadOrder");
 
@@ -410,27 +366,33 @@ namespace TSSDataLogger
             {
                 conn.Open();
 
-                string stm = "SELECT * FROM `orders` WHERE `order_code` LIKE '" + code + "' ORDER BY `order_id` DESC LIMIT 1";
-                MySqlCommand cmd = new MySqlCommand(stm, conn);
-                rdr = cmd.ExecuteReader();
-
-                if (rdr.Read())
+                if (conn.State == ConnectionState.Open)
                 {
-                    order.load(rdr.GetInt32("order_id"),
-                                        rdr.GetString("order_code"),
-                                        rdr.GetString("order_product"),
-                                        rdr.GetDateTime("order_start"),
-                                        rdr.GetDateTime("order_change"),
-                                        rdr.GetInt32("order_n_processes"),
-                                        rdr.GetBoolean("order_complete"),
-                                        rdr.GetInt32("order_quantity"));
+                    string stm = String.Format("SELECT * FROM `orders` WHERE `order_code` LIKE '{0}' LIMIT 1", orderCode);
+                    Debug.WriteLine("stm: " + stm);
+
+                    MySqlCommand cmd = new MySqlCommand(stm, conn);
+                    rdr = cmd.ExecuteReader();
+
+                    if (rdr.Read())
+                    {
+                        order.load(rdr.GetInt32("order_id"),
+                                    rdr.GetString("order_code"),
+                                    rdr.GetDateTime("order_start"),
+                                    rdr.GetDateTime("order_change"),
+                                    rdr.GetBoolean("order_complete"));
+                    }
+                }
+                else
+                {
+                    mainPage.setStatus("FEJL I DATABASE FORBINDELSE - Tjek konfiguration eller tilkald support");
+                    Debug.WriteLine("Could not connect to DB. \nConnection state: " + conn.State);
                 }
             }
             catch (MySqlException ex)
             {
                 Debug.WriteLine("Could not load order from DB. \nConnection status: " + conn.State + " \nException: " + ex.Message);
-                mainPage.setStatus("Could not load order from DB.");
-                return false;
+                mainPage.setStatus("FEJL I DATABASE FORBINDELSE - Tjek konfiguration eller tilkald support");
             }
             finally
             {
@@ -444,7 +406,7 @@ namespace TSSDataLogger
             return true;
         }
 
-        public bool loadProcess(int id, string code)
+        public void loadProcess(int processId)
         {
             Debug.WriteLine("MySqlConnector.loadProcess");
 
@@ -454,27 +416,35 @@ namespace TSSDataLogger
             {
                 conn.Open();
 
-                string stm = "SELECT * FROM `processes` WHERE `process_id` = " + id.ToString() + " AND `process_code` LIKE '" + code + "'ORDER BY `process_id` DESC LIMIT 1";
-                MySqlCommand cmd = new MySqlCommand(stm, conn);
-                rdr = cmd.ExecuteReader();
-
-                if (rdr.Read())
+                if (conn.State == ConnectionState.Open)
                 {
-                    process.load(rdr.GetInt32("process_id"),
-                                            rdr.GetString("process_code"),
-                                            rdr.GetDateTime("process_start"),
-                                            rdr.GetDateTime("process_change"),
-                                            rdr.GetInt32("process_n_events"),
-                                            rdr.GetBoolean("process_complete"),
-                                            rdr.GetInt32("process_quantity"),
-                                            rdr.GetInt32("process_waste"));
+                    string stm = String.Format("SELECT * FROM `processes` WHERE `process_id` = '{0}' LIMIT 1", processId);
+                    Debug.WriteLine("stm: " + stm);
+
+                    MySqlCommand cmd = new MySqlCommand(stm, conn);
+                    rdr = cmd.ExecuteReader();
+
+                    if (rdr.Read())
+                    {
+                        process.load(rdr.GetInt32("process_id"),
+                                        rdr.GetString("process_code"),
+                                        rdr.GetDateTime("process_start"),
+                                        rdr.GetDateTime("process_change"),
+                                        rdr.GetBoolean("process_complete"),
+                                        rdr.GetInt32("process_quantity"),
+                                        rdr.GetInt32("process_waste"));
+                    }
+                }
+                else
+                {
+                    mainPage.setStatus("FEJL I DATABASE FORBINDELSE - Tjek konfiguration eller tilkald support");
+                    Debug.WriteLine("Could not connect to DB. \nConnection state: " + conn.State);
                 }
             }
             catch (MySqlException ex)
             {
                 Debug.WriteLine("Could not load process from DB. \nConnection status: " + conn.State + " \nException: " + ex.Message);
-                mainPage.setStatus("Could not load process from DB.");
-                return false;
+                mainPage.setStatus("FEJL I DATABASE FORBINDELSE - Tjek konfiguration eller tilkald support");
             }
             finally
             {
@@ -484,11 +454,9 @@ namespace TSSDataLogger
                 if (conn != null)
                     conn.Close();
             }
-
-            return true;
         }
 
-        public bool loadProcessFromOrder(int id, string code)
+        public void loadProcessFromOrder(int orderId, string processCode)
         {
             Debug.WriteLine("MySqlConnector.loadProcessFromOrder");
 
@@ -498,28 +466,35 @@ namespace TSSDataLogger
             {
                 conn.Open();
 
-                string stm = "SELECT * FROM `processes` WHERE `process_order_id` = " + id.ToString() + " AND `process_code` LIKE '" + code + "' ORDER BY `process_id` DESC LIMIT 1";
-                MySqlCommand cmd = new MySqlCommand(stm, conn);
-                rdr = cmd.ExecuteReader();
-
-                if (rdr.Read())
+                if (conn.State == ConnectionState.Open)
                 {
-                    process.load(rdr.GetInt32("process_id"),
-                                            rdr.GetString("process_code"),
-                                            rdr.GetDateTime("process_start"),
-                                            rdr.GetDateTime("process_change"),
-                                            rdr.GetInt32("process_n_events"),
-                                            rdr.GetBoolean("process_complete"),
-                                            rdr.GetInt32("process_quantity"),
-                                            rdr.GetInt32("process_waste"));
-                    //status.Text += "\nprocess_n_events: " + rdr.GetInt32("process_n_events");
+                    string stm = String.Format("SELECT * FROM `processes` WHERE `process_order_id` = '{0}' AND `process_code` LIKE '{1}' LIMIT 1", orderId, processCode);
+                    Debug.WriteLine("stm: " + stm);
+
+                    MySqlCommand cmd = new MySqlCommand(stm, conn);
+                    rdr = cmd.ExecuteReader();
+
+                    if (rdr.Read())
+                    {
+                        process.load(rdr.GetInt32("process_id"),
+                                        rdr.GetString("process_code"),
+                                        rdr.GetDateTime("process_start"),
+                                        rdr.GetDateTime("process_change"),
+                                        rdr.GetBoolean("process_complete"),
+                                        rdr.GetInt32("process_quantity"),
+                                        rdr.GetInt32("process_waste"));
+                    }
+                }
+                else
+                {
+                    mainPage.setStatus("FEJL I DATABASE FORBINDELSE - Tjek konfiguration eller tilkald support");
+                    Debug.WriteLine("Could not connect to DB. \nConnection state: " + conn.State);
                 }
             }
             catch (MySqlException ex)
             {
                 Debug.WriteLine("Could not load process from DB. \nConnection status: " + conn.State + " \nException: " + ex.Message);
-                mainPage.setStatus("Could not load process from DB.");
-                return false;
+                mainPage.setStatus("FEJL I DATABASE FORBINDELSE - Tjek konfiguration eller tilkald support");
             }
             finally
             {
@@ -529,11 +504,9 @@ namespace TSSDataLogger
                 if (conn != null)
                     conn.Close();
             }
-
-            return true;
         }
 
-        public bool loadEventsFromProcess(int processId, int noEvents)
+        public void loadEventsFromProcess(int processId)
         {
             Debug.WriteLine("MySqlConnector.loadEventsFromProcess");
 
@@ -543,33 +516,34 @@ namespace TSSDataLogger
             {
                 conn.Open();
 
-                string stm = "SELECT * FROM `events` WHERE `event_process_id` = " + processId.ToString() + " ORDER BY `event_id` DESC LIMIT " + noEvents.ToString();
-                //status.Text += stm;
-                MySqlCommand cmd = new MySqlCommand(stm, conn);
-                rdr = cmd.ExecuteReader();
-
-                events.Clear();
-                while (rdr.Read())
+                if (conn.State == ConnectionState.Open)
                 {
-                    events.Insert(0, new Event() {id = rdr.GetInt32("event_id"),
-                                            code = rdr.GetString("event_code"),
-                                            description = rdr.GetString("event_description"),
-                                            start = rdr.GetDateTime("event_start"),
-                                            change = rdr.GetDateTime("event_change"),
-                                            complete = rdr.GetBoolean("event_complete") } );
-                }
+                    string stm = String.Format("SELECT * FROM `events` WHERE `event_process_id` = '{0}' ORDER BY `event_id` ASC", processId);
+                    Debug.WriteLine("stm: " + stm);
 
-                for(int i = 0; i < events.Count; i++)
+                    MySqlCommand cmd = new MySqlCommand(stm, conn);
+                    rdr = cmd.ExecuteReader();
+
+                    events.Clear();
+                    while (rdr.Read())
+                    {
+                        events.Add(new Event(rdr.GetInt32("event_id"),
+                                                rdr.GetString("event_code"),
+                                                rdr.GetDateTime("event_start"),
+                                                rdr.GetDateTime("event_change"),
+                                                rdr.GetBoolean("event_complete")));
+                    }
+                }
+                else
                 {
-                    events[i].listId = events.Count - i;
+                    mainPage.setStatus("FEJL I DATABASE FORBINDELSE - Tjek konfiguration eller tilkald support");
+                    Debug.WriteLine("Could not connect to DB. \nConnection state: " + conn.State);
                 }
-
             }
             catch (MySqlException ex)
             {
                 Debug.WriteLine("Could not load events from DB. \nConnection status: " + conn.State + " \nException: " + ex.Message);
-                mainPage.setStatus("Could not load events from DB.");
-                return false;
+                mainPage.setStatus("FEJL I DATABASE FORBINDELSE - Tjek konfiguration eller tilkald support");
             }
             finally
             {
@@ -579,10 +553,6 @@ namespace TSSDataLogger
                 if (conn != null)
                     conn.Close();
             }
-
-            return true;
         }
-
-        
     }
 }

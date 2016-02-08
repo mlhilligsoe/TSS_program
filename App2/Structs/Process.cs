@@ -10,25 +10,32 @@ using TSSDataLogger;
 [DataContract, KnownType(typeof(DateTime))]
 public class Process
 {
-    private MainPage mainPage;
     private bool active = false;
 
-    public int id;
-    public string code;
-    public int quantity;
-    public int waste;
-    public DateTime start;
-    public DateTime change;
-    public bool complete;
-    public int n_events;
-    public bool hasLatched;
+    // Object variables
+    public int id { get; set; }
+    public string code { get; set; }
+    public DateTime start { get; set; }
+    public DateTime change { get; set; }
+    public bool complete { get; set; }
+    public int quantity { get; set; }
+    public int waste { get; set; }
 
-    public Process(MainPage mainPage)
+    // GUI representation
+    public string guiStart { get { return start.ToString("HH:mm dd/MM"); } }
+    public string guiChange { get { return change.ToString("HH:mm dd/MM"); } }
+
+    //DB Representation
+    public string dbCode { get { return code.ToString(); } }
+    public string dbStart { get { return start.ToString("yyyy-MM-dd H:mm:ss"); } }
+    public string dbChange { get { return change.ToString("yyyy-MM-dd H:mm:ss"); } }
+    public string dbComplete { get { return complete ? "1" : "0"; } }
+
+    public Process()
     {
-        this.mainPage = mainPage;
     }
 
-    public void load(int id, string code, DateTime start, DateTime change, int n_events = 0, bool complete = false, int quantity = 0, int waste = 0)
+    public void load(int id, string code, DateTime start, DateTime change, bool complete = false, int quantity = 0, int waste = 0)
     {
         active = true;
         this.id = id;
@@ -38,13 +45,24 @@ public class Process
         this.complete = complete;
         this.quantity = quantity;
         this.waste = waste;
-        this.n_events = n_events;
-        this.hasLatched = false;
+    }
+
+    public void load(string code, DateTime start, DateTime change, bool complete = false, int quantity = 0, int waste = 0)
+    {
+        active = true;
+        this.id = -1;
+        this.code = code;
+        this.start = new DateTime(start.Ticks, DateTimeKind.Local);
+        this.change = new DateTime(change.Ticks, DateTimeKind.Local);
+        this.complete = complete;
+        this.quantity = quantity;
+        this.waste = waste;
     }
 
     public void unload()
     {
         active = false;
+        this.id = -1;
     }
 
     public bool isLoaded()

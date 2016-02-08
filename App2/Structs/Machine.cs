@@ -20,7 +20,10 @@ namespace TSSDataLogger
         public string name;
         public string processCode;
         public Dictionary<MachineStates, bool> states;
-        
+
+        public bool hasLatched;
+
+
 
         public Machine(MainPage mainPage) 
         {

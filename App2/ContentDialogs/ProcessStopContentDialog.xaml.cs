@@ -17,49 +17,61 @@ using Windows.UI.Xaml.Navigation;
 
 namespace TSSDataLogger.ContentDialogs
 {
-    public enum ProcessStopResult
-    {
-        Complete,
-        Pause,
-        Error1,
-        Error2,
-        NewBar
-    }
-    
     public sealed partial class ProcessStopContentDialog : ContentDialog
     {
-        public ProcessStopResult Result { get; private set; }
-
-        public ProcessStopContentDialog()
+        MainPage mainPage;
+        Logic logic;
+        
+        public ProcessStopContentDialog(MainPage mainPage, Logic logic)
         {
-            this.InitializeComponent();
+            this.mainPage = mainPage;
+            this.logic = logic;
 
-            // Set default response, in case no button is pressed
-            this.Result = ProcessStopResult.NewBar;
+            this.Opened += ProcessStopContentDialog_Opened;
+            this.Closed += ProcessStopContentDialog_Closed;
+
+            this.KeyUp += ProcessStopContentDialog_KeyUp;
+
+            this.InitializeComponent();
+        }
+
+        private void ProcessStopContentDialog_KeyUp(object sender, KeyRoutedEventArgs e)
+        {
+            mainPage.MainPage_KeyUp(sender, e);
+        }
+
+        private void ProcessStopContentDialog_Closed(ContentDialog sender, ContentDialogClosedEventArgs args)
+        {
+            //mainPage.contentDialogIsActive = false;
+        }
+
+        private void ProcessStopContentDialog_Opened(ContentDialog sender, ContentDialogOpenedEventArgs args)
+        {
+            //mainPage.contentDialogIsActive = true;
         }
 
         private void completeButton_Click(object sender, RoutedEventArgs e)
         {
-            this.Result = ProcessStopResult.Complete;
-            this.Hide();
+            mainPage.hideProcessStopContentDialog();
+            logic.completeOrder();
         }
 
         private void error1Button_Click(object sender, RoutedEventArgs e)
         {
-            this.Result = ProcessStopResult.Error1;
-            this.Hide();
+            mainPage.hideProcessStopContentDialog();
+            logic.error1Event();
         }
 
         private void error2Button_Click(object sender, RoutedEventArgs e)
         {
-            this.Result = ProcessStopResult.Error2;
-            this.Hide();
+            mainPage.hideProcessStopContentDialog();
+            logic.error2Event();
         }
 
         private void pauseButton_Click(object sender, RoutedEventArgs e)
         {
-            this.Result = ProcessStopResult.Pause;
-            this.Hide();
+            mainPage.hideProcessStopContentDialog();
+            logic.pauseEvent();
         }
     }
 }

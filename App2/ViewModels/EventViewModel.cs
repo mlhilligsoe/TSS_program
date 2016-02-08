@@ -31,7 +31,6 @@ namespace TSSDataLogger.ViewModels
         }
 
         public string code { get; set; }
-        public string description { get; set; }
         public DateTime start { get; set; }
 
         public EventViewModel()
@@ -42,11 +41,9 @@ namespace TSSDataLogger.ViewModels
         {
             var viewModel = new EventViewModel();
 
-            viewModel._listId = item.listId;
             viewModel.start = item.start;
             viewModel.code = item.code;
-            viewModel.description = item.description;
-
+            
             return viewModel;
         }
     }

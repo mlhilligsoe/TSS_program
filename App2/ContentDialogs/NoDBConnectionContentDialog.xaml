@@ -1,0 +1,20 @@
+﻿<ContentDialog
+    x:Class="TSSDataLogger.ContentDialogs.NoDBConnectionContentDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:TSSDataLogger.ContentDialogs"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    VerticalAlignment="Stretch"
+    Background="#FF075959"
+    MaxWidth="1280"
+    >
+    
+
+    <StackPanel Orientation="Vertical">
+        <TextBlock Text="FEJL VED DATABASE OVERFØRSEL" Style="{StaticResource ContentDialogTextBlockStyle}"/>
+        <TextBlock Text="Tjek konfiguration eller tilkald support." Style="{StaticResource ContentDialogTextBlockStyle}"/>
+        <Button Name="okButton" Content="OK" Click="okButton_Click" Style="{StaticResource ContentDialogButtonStyle}"/>
+    </StackPanel>
+</ContentDialog>
